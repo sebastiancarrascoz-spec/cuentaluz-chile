@@ -1,6 +1,6 @@
 # Operación del candidato
 
-El proceso de producción se probó localmente con SQLite. Docker, hosting, dominio, certificado y PostgreSQL requieren comprobación en el destino. Las pruebas técnicas no acreditan exactitud tarifaria. Consultar `PLAN_PRODUCCION.md` antes de lanzar.
+El proceso de producción se probó localmente con SQLite y en un contenedor de CI de GitHub. Hosting, dominio, certificado y PostgreSQL requieren comprobación en el destino. Las pruebas técnicas no acreditan exactitud tarifaria. Consultar `PLAN_PRODUCCION.md` antes de lanzar. Sebastián decidió seguir mejorando antes de publicar y aún no tiene hosting/dominio.
 
 ## Respaldo y recuperación
 
@@ -34,6 +34,6 @@ La sonda comprueba `/health/live` y `/health/ready`, devuelve código 1 ante un 
 
 ## Lanzamiento
 
-CI prepara construcción, arranque HTTP, prueba de respaldo/restauración con el usuario del contenedor, reinicio y repetición de controles. No reemplaza la prueba de persistencia del volumen de hosting ni la recuperación desde almacenamiento remoto. Mantener explícita la evidencia de ejecución remota y corregir fallos antes de promover el candidato.
+CI ejecuta construcción, arranque HTTP, prueba de respaldo/restauración con el usuario del contenedor, reinicio y repetición de controles. La primera ejecución remota aprobada es https://github.com/sebastiancarrascoz-spec/cuentaluz-chile/actions/runs/42510260109 para `34822ea545a695b0e6e12c47a06ba9458a26efbb`. No reemplaza la prueba de persistencia del volumen de hosting ni la recuperación desde almacenamiento remoto. Cada modificación posterior debe conservar su propia evidencia y corregir fallos antes de promover el candidato.
 
 Después se necesitan hosting y dominio concretos, presupuesto si hay servicios pagados, HTTPS, volumen persistente, copia remota, retención, alertas y contacto público. El piloto con precios propios debe describirse como escenario declarado. Para activar tarifas oficiales falta cerrar los controles documentales y numéricos de los perfiles; no se habilitan cambiando una fecha o una bandera sin evidencia.

@@ -4,7 +4,7 @@ Fecha: 7 de noviembre de 2026. Rama local: `mejora/produccion-v2`.
 
 ## Actualización nacional
 
-8 de noviembre, avance ordenado: leer [PLAN_PRODUCCION.md](PLAN_PRODUCCION.md), [CUENTA_CONSOLIDADA.md](CUENTA_CONSOLIDADA.md), [NORMALIZACION_NACIONAL.md](NORMALIZACION_NACIONAL.md) y [OPERACION.md](OPERACION.md). La cuenta consolidada ya integra demanda e impuestos con datos declarados; 63.120 celdas de precio de cuatro empresas están normalizadas como candidatos. El corpus tiene una factura real anonimizada. Se comprobó respaldo/restauración SQLite y se prepararon pruebas de arranque/reinicio del contenedor en CI. No hay todavía perfiles oficiales aprobados ni despliegue público comprobado.
+8 de noviembre, avance ordenado: leer [PLAN_PRODUCCION.md](PLAN_PRODUCCION.md), [CUENTA_CONSOLIDADA.md](CUENTA_CONSOLIDADA.md), [NORMALIZACION_NACIONAL.md](NORMALIZACION_NACIONAL.md) y [OPERACION.md](OPERACION.md). La cuenta consolidada ya integra demanda e impuestos con datos declarados; 63.120 celdas de precio de cuatro empresas están normalizadas como candidatos. El corpus tiene una factura real anonimizada. Se comprobó respaldo/restauración SQLite y pasaron las pruebas de arranque/reinicio del contenedor en CI remota. No hay todavía perfiles oficiales aprobados ni despliegue público comprobado.
 
 BT3/AT3: `/demanda-3` añade una revisión del cargo neto de demanda con precio e históricos declarados. Mantiene separadas la demanda base en kW y el mínimo monetario. Si la ventana histórica altera el resultado y no está confirmada, muestra las alternativas sin devolver un cargo único. El resultado no incluye IVA ni otros cargos de la cuenta. No activa un perfil oficial: la ventana y la aplicabilidad siguen pendientes de cotejo. Ver [DEMANDA_BT3_AT3.md](DEMANDA_BT3_AT3.md).
 
@@ -20,7 +20,7 @@ Las herramientas de respaldo utilizan `requirements-sources.txt` y quedan fuera 
 
 ## Estado real de esta entrega
 
-La interfaz y el cálculo con precios propios están implementados. El catálogo histórico se conserva para exploración en desarrollo. No se ha publicado una nueva versión, configurado un dominio ni acreditado una revisión tarifaria vigente. Tampoco se ha construido la imagen Docker en este equipo, que no dispone de Docker.
+La interfaz y el cálculo con precios propios están implementados. El catálogo histórico se conserva para exploración en desarrollo. No se ha publicado una web, configurado un dominio ni acreditado una revisión tarifaria vigente. El equipo local no dispone de Docker; GitHub CI sí construyó y ejecutó el contenedor, comprobó respaldo/restauración y reinicio. Ver el resultado remoto en `PLAN_PRODUCCION.md`. Sebastián prefiere seguir mejorando antes de elegir hosting y publicar.
 
 El estado técnico `/health/ready` comprueba base de datos y disponibilidad del motor; no certifica vigencia ni exactitud tarifaria. Devuelve además el estado del catálogo.
 
@@ -37,7 +37,7 @@ Se mantiene FastAPI/Jinja2, con CSS y JavaScript locales. La web no requiere Nod
 - `Dockerfile`: usuario sin privilegios, comprobación de salud, límite de concurrencia y ejecución sin recarga de desarrollo. No copia credenciales, scrapers, herramientas de desarrollo ni artefactos de prueba.
 - `compose.yaml`: puerto solo en loopback, volumen para SQLite y capacidades Linux retiradas. Necesita proxy TLS delante para acceso público.
 - `railway.toml`: construcción con Dockerfile y salud en `/health/ready`. Configurar las variables antes del despliegue.
-- `.github/workflows/ci.yml`: pruebas, auditoría de dependencias y construcción Docker. Está preparado; todavía no se ha ejecutado en GitHub.
+- `.github/workflows/ci.yml`: pruebas, auditoría, construcción/arranque Docker, respaldo/restauración y reinicio. Primera ejecución remota aprobada; evidencia en `PLAN_PRODUCCION.md`. Se ejecuta para PR y cambios en `master` para evitar duplicar tareas en la rama de revisión.
 
 Variables mínimas públicas:
 

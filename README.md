@@ -79,7 +79,7 @@ En la revisión de esta entrega, los scripts de navegador usaron Playwright 1.57
 
 ## Producción
 
-Ver [PRODUCCION.md](PRODUCCION.md). Hay Dockerfile, Compose, configuración Railway y flujo CI preparados. El despliegue público, el contenedor y la revisión de tarifas son pendientes explícitos. No se enviaron correos ni se modificó el sitio remoto.
+Ver [PRODUCCION.md](PRODUCCION.md). La CI de GitHub construyó y ejecutó el contenedor, comprobó sus controles y probó respaldo/restauración y reinicio. El despliegue público y la validación de tarifas siguen pendientes. Sebastián decidió mejorar antes de publicar. La propuesta de código está en la revisión en borrador [#1](https://github.com/sebastiancarrascoz-spec/cuentaluz-chile/pull/1).
 
 Los scrapers son herramientas de revisión: generan candidatos fuera del catálogo activo. No se programan desde el servidor web. La newsletter y el GPS heredados no están expuestos.
 # Avance hacia producción

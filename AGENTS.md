@@ -4,6 +4,10 @@ Proyecto independiente de Inergy, ARBA y del trabajo con el empleador. Leer `PRO
 
 ## Última actualización: cuenta consolidada y normalización del 8 de noviembre de 2026
 
+- Actualización posterior: Sebastián confirmó que no conoce red ni promedio de 2025; se mantienen pendientes y se añadió ayuda a `/metodologia#datos-suministro`. Confirmó que aún no tiene hosting/dominio y prefiere mejorar antes de publicar. No desplegar la web ni contratar servicios.
+- Se creó PR en borrador #1: https://github.com/sebastiancarrascoz-spec/cuentaluz-chile/pull/1 , rama `revision/produccion-integrada-c31b2fe`. Primer commit remoto `34822ea545a695b0e6e12c47a06ba9458a26efbb`, árbol idéntico al local `c31b2fe`; las historias difieren porque la conexión creó una revisión acumulada desde `master`. No modificar ni forzar `master` ni afirmar que el local tiene upstream equivalente.
+- Primera CI remota aprobada: ejecución `42510260109`. Incluyó auditoría, construcción/arranque del contenedor, controles HTTP, respaldo/restauración y reinicio. Docker sigue ausente localmente, pero el contenedor ya se comprobó en GitHub. Actualizaciones posteriores requieren su propia verificación; registrar sus SHA y ejecución.
+
 - Sebastián autorizó avanzar con todo en orden. Leer `PLAN_PRODUCCION.md`: cerrar Enel, unificar cuenta, matriz nacional, corpus, actualización controlada y operación. No confundir avance independiente con cierre de una etapa sin antecedentes.
 - `/cuenta` y `/api/evaluar-cuenta` reúnen períodos, demanda, impuestos y ajustes. Los resultados de demanda transfieren históricos por POST; se validan y recalculan al consolidar. Se rechaza la duplicación manual, los faltantes y la demanda BT3 sin resultado único. Leer `CUENTA_CONSOLIDADA.md`.
 - `normalize_saesa_sources.py` extrajo 63.120 candidatos de 12 Excel oficiales de septiembre/octubre/noviembre, conservando valor XML y publicación a tres decimales. Hay 113 CUT con valores en este lote, 233 sin ellos, cinco encabezados sin equivalencia y 786 incidencias. Matriz de 346 comunas en `artifacts/normalizacion`. Ver `NORMALIZACION_NACIONAL.md`; no sumar agregados junto con sus componentes.
