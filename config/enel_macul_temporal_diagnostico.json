@@ -1,0 +1,24 @@
+{
+  "estado": "diagnostico_no_aprobado",
+  "fecha_revision": "2026-11-08",
+  "fuentes": [
+    {"mes":"2026-09", "pagina":1, "original_respaldado":false, "url":"https://www.enel.cl/content/dam/enel-cl/es/personas/informacion-de-utilidad/tarifas-y-reglamentos/tarifas/tarifas-reguladas/2026/Enel%20Distribuci%C3%B3n%20Chile%20SA._Tarifas%20Suministro%20El%C3%A9ctrico%208T_%20VAD%205T%20Septiembre%20de%202026.pdf"},
+    {"mes":"2026-10", "pagina":1, "original_respaldado":false, "url":"https://www.enel.cl/content/dam/enel-cl/es/personas/informacion-de-utilidad/tarifas-y-reglamentos/tarifas/tarifas-reguladas/2026/Enel%20Distribuci%C3%B3n%20Chile%20SA._Tarifas%20Suministro%20El%C3%A9ctrico%208T_%20VAD%205T%20Octubre%20de%202026.pdf"}
+  ],
+  "supuestos": [
+    "Precios netos de la columna Macul, red BT_AA y tramo ETR T1, consultados mediante la herramienta web. Red, área y tramo del suministro aún por confirmar.",
+    "Electricidad de septiembre: 136.169 + 25.078 + 20.160 = 181.407 $/kWh; octubre: 136.169 + 25.078 + 20.129 = 181.376 $/kWh.",
+    "Se excluye la lectura anterior y se incluye la actual: 7 días de septiembre y 21 de octubre.",
+    "Se pondera el fijo por la proporción de días del período como hipótesis; la política de redondeo no está acreditada.",
+    "El resultado con redondeo sobre subtotal coincide con el total del documento pero la electricidad redondeada por separado difiere en $1. No se imputa ese ajuste al cargo para forzar coincidencia.",
+    "El escenario de 145 kWh no incluye FET. No es una tabla aprobada ni una tarifa vigente de noviembre."
+  ],
+  "entrada": {
+    "lectura_anterior":"2026-09-23", "lectura_actual":"2026-10-21", "kwh":"145",
+    "asignacion":"dias", "modo_fijo":"ponderado", "redondeo":"por_cargo",
+    "precios": [
+      {"desde":"2026-09-01", "hasta":"2026-09-30", "electricidad_neta":"181.407", "transporte_neto":"17.218", "servicio_exento":"0.855", "fijo_neto":"611.118"},
+      {"desde":"2026-10-01", "hasta":"2026-10-31", "electricidad_neta":"181.376", "transporte_neto":"17.218", "servicio_exento":"0.855", "fijo_neto":"614.924"}
+    ]
+  }
+}

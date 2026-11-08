@@ -1,0 +1,98 @@
+@media print {
+  html,
+  body {
+    background: white;
+  }
+  .result-heading {
+    margin-bottom: 12px;
+  }
+  .result-heading h1 {
+    font-size: 27px;
+    margin-bottom: 7px;
+  }
+  .result-heading .eyebrow {
+    margin-bottom: 6px;
+  }
+  .notice {
+    margin: 10px 0;
+    padding: 9px 12px;
+  }
+  .results-grid {
+    margin: 12px 0;
+    gap: 16px;
+  }
+  .total-card,
+  .breakdown-card {
+    padding: 18px;
+  }
+  .total-number {
+    font-size: 37px;
+    margin-top: 14px;
+  }
+  .total-card > p {
+    margin: 8px 0;
+  }
+  .total-divider {
+    margin: 14px 0;
+  }
+  .total-metrics strong {
+    font-size: 21px;
+  }
+  .total-foot {
+    padding-top: 12px;
+  }
+  .stacked-bar {
+    margin: 15px 0 10px;
+  }
+  .breakdown-table {
+    font-size: 10px;
+  }
+  .breakdown-table td,
+  .breakdown-table th {
+    padding: 4px 0;
+  }
+  .breakdown-table tfoot td,
+  .breakdown-table tfoot th {
+    padding-top: 9px;
+  }
+  .breakdown-card h2 {
+    font-size: 19px;
+  }
+  .savings-section {
+    padding: 12px 0;
+  }
+  .savings-section h2 {
+    font-size: 22px;
+  }
+  .savings-grid {
+    margin-top: 12px;
+    gap: 12px;
+  }
+  .saving-card {
+    padding: 14px;
+  }
+  .saving-amount {
+    font-size: 23px;
+    margin: 12px 0;
+  }
+  .saving-bottom {
+    padding-top: 8px;
+    font-size: 9px;
+  }
+  .calculation-details {
+    padding: 14px;
+    margin: 12px 0 0;
+  }
+  .calculation-details summary {
+    font-size: 11px;
+  }
+  .calculation-details p {
+    font-size: 10px;
+    line-height: 1.5;
+    margin-top: 8px;
+  }
+  .comparison-card {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+}

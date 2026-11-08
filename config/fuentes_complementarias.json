@@ -1,0 +1,5 @@
+[
+  {"id":"tiltil_indice_actual","proveedor":"tiltil","clase":"indice","url":"https://electricatiltil.cl/tarifas/"},
+  {"id":"socoepa_noviembre","proveedor":"socoepa","clase":"indice","url":"https://www.cooperativaelectrica.cl/rateFiltro?year=2026&month=11"},
+  {"id":"emelca_publicacion_marzo","proveedor":"emelca","clase":"pliego","url":"https://legales.cooperativa.cl/wp-content/uploads/2026/03/VERSI%C3%93N-IMPRESA-TARIFAS-DE-SUMINISTRO-EMELCA.pdf","contexto":"Publicación legal de la distribuidora, marzo de 2026; no acredita noviembre."}
+]

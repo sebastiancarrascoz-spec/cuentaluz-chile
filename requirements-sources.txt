@@ -1,0 +1,4 @@
+# Herramientas de investigación documental, fuera de la imagen de producción.
+-r requirements-dev.txt
+pymupdf==2.1
+xlrd==2.0.2

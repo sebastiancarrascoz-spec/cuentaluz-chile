@@ -1,0 +1,18 @@
+[
+  {"id":"cne_opciones","proveedor":"cne","clase":"indice","url":"https://www.cne.cl/tarificacion/electrica/valor-agregado-de-distribucion/opciones-tarifarias-a-usuarios-finales/"},
+  {"id":"cne_vad2020","proveedor":"cne","clase":"indice","url":"https://www.cne.cl/tarificacion/electrica/valor-agregado-de-distribucion/vad-2020-2024-y-servicios-asociados/"},
+  {"id":"cne_vad2024","proveedor":"cne","clase":"indice","url":"https://www.cne.cl/tarificacion/electrica/valor-agregado-de-distribucion/vad-2024-2028/"},
+  {"id":"cne_ssmm","proveedor":"cne","clase":"indice","url":"https://www.cne.cl/tarificacion/electrica/tarificacion-sistemas-medianos/"},
+  {"id":"cne_csp","proveedor":"cne","clase":"indice","url":"https://www.cne.cl/tarificacion/electrica/cargo-por-servicio-publico/"},
+  {"id":"cne_transmision","proveedor":"cne","clase":"indice","url":"https://www.cne.cl/tarificacion/electrica/cargos-de-transmision/"},
+  {"id":"cge_suministro","proveedor":"cge","clase":"indice","url":"https://www.cge.cl/informacion-comercial/tarifas-y-procesos-tarifarios/tarifa-de-suministro/"},
+  {"id":"chilquinta_inicio","proveedor":"chilquinta","clase":"indice","url":"https://www.chilquinta.cl/"},
+  {"id":"codiner_inicio","proveedor":"codiner","clase":"indice","url":"https://www.codiner.cl/"},
+  {"id":"codiner_suministro","proveedor":"codiner","clase":"pliego","url":"https://www.codiner.cl/assets/oficios/Suministros.pdf"},
+  {"id":"emelca_tarifas","proveedor":"emelca","clase":"indice","url":"https://www.emelca.cl/tarifas/"},
+  {"id":"socoepa_tarifas","proveedor":"socoepa","clase":"indice","url":"https://www.cooperativaelectrica.cl/rates"},
+  {"id":"tiltil_tarifas","proveedor":"tiltil","clase":"indice","url":"https://electricatiltil.cl/tarifa/"},
+  {"id":"luzlinares_inicio","proveedor":"luzlinares","clase":"indice","url":"https://www.luzlinares.cl/"},
+  {"id":"luzparral_inicio","proveedor":"luzparral","clase":"indice","url":"https://www.luzparral.cl/"},
+  {"id":"edelmag_tarifas","proveedor":"edelmag","clase":"indice","url":"https://www.edelmag.cl/informacion-comercial/tarifas-y-opciones-tarifarias/tarifas-de-suministros/"}
+]

@@ -1,0 +1,18 @@
+{
+  "id": "enel_anonima_001",
+  "origen": "factura_real_aportada_por_usuario",
+  "documento_publicado": false,
+  "validacion_tarifaria": "pendiente",
+  "alcance": "Transcripción anonimizada de importes. No contiene identificadores del suministro ni permite seleccionar red o tramo. Solo contrasta conciliación aritmética.",
+  "entrada": {
+    "lineas": [
+      {"nombre": "Electricidad", "neto": "26300", "tratamiento": "afecto"},
+      {"nombre": "Transporte", "neto": "2497", "tratamiento": "afecto"},
+      {"nombre": "Administración", "neto": "614", "tratamiento": "afecto"},
+      {"nombre": "Servicio público", "neto": "124", "tratamiento": "exento"}
+    ],
+    "total_documento": 35123,
+    "ajustes_finales": "0"
+  },
+  "esperado": {"neto_afecto": 29411, "iva": 5588, "exento": 124, "total": 35123, "diferencia": 0}
+}

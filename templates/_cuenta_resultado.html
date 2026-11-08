@@ -1,0 +1,21 @@
+<section class="card" aria-labelledby="total-cuenta">
+  <p class="eyebrow">CUENTA CONSOLIDADA · DATOS DECLARADOS</p>
+  <h2 id="total-cuenta">Total del escenario: {{ consolidada.total | clp }}</h2>
+  <p>Este resultado reúne los cargos que declaraste. La tarifa y su aplicabilidad siguen pendientes de validación.</p>
+  <div class="pdf-table" role="region" tabindex="0" aria-label="Desglose de la cuenta"><table class="breakdown-table">
+    <caption>Importes antes del IVA, redondeados al peso</caption>
+    <thead><tr><th scope="col">Cargo</th><th scope="col">Tratamiento</th><th scope="col">Importe</th></tr></thead>
+    <tbody>{% for c in consolidada.componentes %}<tr><th scope="row">{{ c.nombre }}</th><td>{{ {'afecto':'Afecto a IVA','exento':'Exento','final':'Después del IVA'}[c.tratamiento] }}</td><td>{{ c.neto | clp }}</td></tr>{% endfor %}
+    <tr><th scope="row" colspan="2">Ajuste de redondeo afecto</th><td>{{ consolidada.ajuste_redondeo_afecto | clp }}</td></tr>
+    <tr><th scope="row" colspan="2">Ajuste de redondeo exento</th><td>{{ consolidada.ajuste_redondeo_exento | clp }}</td></tr>
+    <tr><th scope="row" colspan="2">Neto afecto</th><td>{{ consolidada.neto_afecto | clp }}</td></tr>
+    <tr><th scope="row" colspan="2">IVA 19 %</th><td>{{ consolidada.iva | clp }}</td></tr>
+    <tr><th scope="row" colspan="2">Total con exentos y ajustes finales</th><td>{{ consolidada.total | clp }}</td></tr></tbody>
+  </table></div>
+  {% if consolidada.total_documento is not none %}<p>Total del documento: <strong>{{ consolidada.total_documento | clp }}</strong>. Diferencia documento menos escenario: <strong>{{ consolidada.diferencia | clp }}</strong>.</p>{% endif %}
+  <details><summary>Respaldo y alcance de los cargos</summary>
+    {% for c in consolidada.componentes %}<p><strong>{{ c.nombre }}:</strong> {{ c.respaldo }}. Antes de redondear: {{ c.sin_redondear | replace('.', ',') }}.</p>{% endfor %}
+    {% for key, d in consolidada.declaraciones.items() %}<p>{{ key | replace('_',' ') | capitalize }}: {{ {'no_aplica':'no aplica (declarado)', 'declarado':'importe declarado', 'calculada':'calculada desde históricos declarados'}[d.estado] }}. {{ d.respaldo }}</p>{% endfor %}
+    <p>{{ consolidada.alcance }}</p>
+  </details>
+</section>

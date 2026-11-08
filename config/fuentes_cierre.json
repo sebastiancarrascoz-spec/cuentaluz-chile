@@ -1,0 +1,164 @@
+[
+  {
+    "id": "cec_doc_fa02c87f881f",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202611/v1.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE SUMINISTRO ELÉCTRICO"
+  },
+  {
+    "id": "cec_doc_32188dc3f961",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202611/v2.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE SERVICIOS REGULADOS"
+  },
+  {
+    "id": "cec_doc_ad2395e7555b",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202611/v3.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE SERVICIOS NO REGULADOS"
+  },
+  {
+    "id": "cec_doc_8c73cf578554",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202611/v4.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE CONEXIÓN EQUIPAMIENTO NET BILLING"
+  },
+  {
+    "id": "cec_doc_f39bc51513ed",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202611/v5.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS PEAJES DE DISTRIBUCIÓN"
+  },
+  {
+    "id": "cec_doc_81c131437573",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202611/pmgd.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE CONEXIÓN PMGD"
+  },
+  {
+    "id": "cec_doc_2979c64074de",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202610/v1.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE SUMINISTRO ELÉCTRICO"
+  },
+  {
+    "id": "cec_doc_8c6a52f21679",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202610/v2.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE SERVICIOS REGULADOS"
+  },
+  {
+    "id": "cec_doc_4bf8447012c7",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202610/v3.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE SERVICIOS NO REGULADOS"
+  },
+  {
+    "id": "cec_doc_a8ecd5dafeeb",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202610/v4.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE CONEXIÓN EQUIPAMIENTO NET BILLING"
+  },
+  {
+    "id": "cec_doc_bd75b3f00888",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202610/v5.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS PEAJES DE DISTRIBUCIÓN"
+  },
+  {
+    "id": "cec_doc_fa31446d9c7f",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202610/pmgd.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE CONEXIÓN PMGD"
+  },
+  {
+    "id": "cec_doc_a9e880277bd1",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202609/v1.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE SUMINISTRO ELÉCTRICO"
+  },
+  {
+    "id": "cec_doc_a41db257bc1b",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202609/v2.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE SERVICIOS REGULADOS"
+  },
+  {
+    "id": "cec_doc_54d72f1dc269",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202609/v3.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE SERVICIOS NO REGULADOS"
+  },
+  {
+    "id": "cec_doc_2b4a39de0d6c",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202609/v4.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE CONEXIÓN EQUIPAMIENTO NET BILLING"
+  },
+  {
+    "id": "cec_doc_a44506398fd5",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202609/v5.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS PEAJES DE DISTRIBUCIÓN"
+  },
+  {
+    "id": "cec_doc_4b401c5fa51a",
+    "proveedor": "cec",
+    "clase": "pliego",
+    "url": "https://www.cecltda.cl/archivos/tarifas/202609/pmgd.pdf",
+    "origen": "https://www.cecltda.cl/clientes/tarifas/",
+    "contexto": "TARIFAS DE CONEXIÓN PMGD"
+  },
+  {
+    "id": "chilquinta_octubre_2026",
+    "proveedor": "chilquinta",
+    "clase": "pliego",
+    "url": "https://a.storyblok.com/f/82872/x/15e3458592/suministro_chilquinta_202610.pdf"
+  },
+  {
+    "id": "litoral_octubre_2026",
+    "proveedor": "litoral",
+    "clase": "pliego",
+    "url": "https://a.storyblok.com/f/188585/x/de21511dd6/suministro_litoral_202610.pdf"
+  },
+  {
+    "id": "cge_octubre_2026",
+    "proveedor": "cge",
+    "clase": "pliego",
+    "url": "https://www.cge.cl/wp-content/uploads/2026/10/Tarifas-de-Suministro-Electrico-vigentes-a-partir-del-1-de-octubre-2026.pdf"
+  }
+]

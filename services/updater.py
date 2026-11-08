@@ -78,7 +78,10 @@ def _cargar_tarifas() -> dict:
 
 
 def _guardar_tarifas(data: dict) -> None:
-    with open(_TARIFAS_PATH, "w", encoding="utf-8") as f:
+    # Una extracción automática es un candidato, no una aprobación documental.
+    candidate = _ROOT / "data" / "revision" / "tarifas_candidatas.json"
+    candidate.parent.mkdir(parents=True, exist_ok=True)
+    with open(candidate, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
@@ -212,7 +215,8 @@ def aplicar_actualizacion(
         tarifas_data[dist_id]["tarifas"][tipo].update(nueva)
 
     tarifas_data[dist_id]["ultima_actualizacion"] = date.today().isoformat()
-    tarifas_data[dist_id]["datos_verificados"]    = True
+    tarifas_data[dist_id]["datos_verificados"] = False
+    tarifas_data[dist_id]["revision_documental"] = {"estado": "pendiente", "motivo": "Extracción automática sin aprobación documental"}
 
     return True, cambios
 
@@ -252,17 +256,7 @@ def run_update(dists: list[str] | None = None, dry_run: bool = False, force: boo
         _guardar_tarifas(tarifas_data)
         logger.info(f"tarifas.json actualizado. Distribuidoras: {', '.join(dists_actualizadas)}")
 
-        # Notificacion email
-        if cambios_totales:
-            cuerpo = (
-                f"Actualizacion de tarifas — {date.today()}\n"
-                f"Distribuidoras actualizadas: {', '.join(dists_actualizadas)}\n"
-                f"\nCambios detectados:\n" + "\n".join(cambios_totales)
-            )
-            _enviar_email(
-                f"Tarifas actualizadas — {', '.join(dists_actualizadas)}",
-                cuerpo
-            )
+        logger.info("Candidato guardado en data/revision/tarifas_candidatas.json; catálogo activo sin cambios. No se envían correos.")
     elif not dists_actualizadas:
         logger.info("Sin cambios detectados. tarifas.json no modificado.")
 

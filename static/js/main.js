@@ -1,269 +1,221 @@
-/* =========================================================
-   CuentaLuz Chile – JavaScript principal
-   Responsabilidades:
-   1. Tabs calculadora (kWh directo vs. aparatos)
-   2. Contador de kWh en tiempo real (modo aparatos)
-   3. Toggle visual de tarjetas de aparatos
-   4. Info box BT2
-   ========================================================= */
-
-// ─── Utilidades ───────────────────────────────────────────
-
-function fmtKwh(valor) {
-  return valor.toFixed(1) + ' kWh/mes';
-}
-
-// ─── Tabs ─────────────────────────────────────────────────
-
-function switchTab(modo) {
-  const panelKwh      = document.getElementById('panel-kwh');
-  const panelAparatos = document.getElementById('panel-aparatos');
-  const tabKwh        = document.getElementById('tab-kwh');
-  const tabAparatos   = document.getElementById('tab-aparatos');
-  const modoInput     = document.getElementById('modo-input');
-
-  if (!panelKwh || !panelAparatos) return;
-
-  if (modo === 'kwh') {
-    panelKwh.classList.remove('hidden');
-    panelAparatos.classList.add('hidden');
-
-    tabKwh.classList.add('text-electric-600', 'border-electric-600', 'bg-white');
-    tabKwh.classList.remove('text-gray-500', 'border-transparent');
-    tabAparatos.classList.remove('text-electric-600', 'border-electric-600', 'bg-white');
-    tabAparatos.classList.add('text-gray-500', 'border-transparent');
-  } else {
-    panelAparatos.classList.remove('hidden');
-    panelKwh.classList.add('hidden');
-
-    tabAparatos.classList.add('text-electric-600', 'border-electric-600', 'bg-white');
-    tabAparatos.classList.remove('text-gray-500', 'border-transparent');
-    tabKwh.classList.remove('text-electric-600', 'border-electric-600', 'bg-white');
-    tabKwh.classList.add('text-gray-500', 'border-transparent');
-  }
-
-  if (modoInput) modoInput.value = modo;
-}
-
-// ─── Aparatos: estado visual de tarjeta ───────────────────
-
-function actualizarTarjeta(item) {
-  const checkbox = item.querySelector('.aparato-check');
-  const card     = item.querySelector('.aparato-card');
-  if (!checkbox || !card) return;
-
-  if (checkbox.checked) {
-    card.classList.add('border-electric-500', 'bg-electric-50');
-    card.classList.remove('border-gray-200');
-  } else {
-    card.classList.remove('border-electric-500', 'bg-electric-50');
-    card.classList.add('border-gray-200');
-  }
-}
-
-// ─── Aparatos: cálculo en tiempo real ─────────────────────
-
-function calcularKwhAparatos() {
-  const items = document.querySelectorAll('.aparato-item');
-  let total = 0;
-
-  items.forEach(item => {
-    const checkbox = item.querySelector('.aparato-check');
-    const horasInput = item.querySelector('.horas-input');
-    const potencia   = parseFloat(item.dataset.potenciaW || 0);
-    const kwhDisplay = item.querySelector('.aparato-kwh');
-
-    if (!checkbox || !horasInput) return;
-
-    const horas = parseFloat(horasInput.value) || 0;
-    const kwh   = (potencia / 1000) * horas * 30;
-
-    // Mostrar kWh parcial en la tarjeta
-    if (kwhDisplay) {
-      kwhDisplay.textContent = checkbox.checked ? '~' + kwh.toFixed(1) + ' kWh' : '';
-    }
-
-    if (checkbox.checked) {
-      total += kwh;
-    }
-  });
-
-  const badge = document.getElementById('kwh-live-badge');
-  if (badge) {
-    badge.textContent = fmtKwh(total);
-    badge.classList.toggle('bg-green-600', total > 0);
-    badge.classList.toggle('bg-electric-600', total === 0);
-  }
-
-  return total;
-}
-
-// ─── BT2 info box ─────────────────────────────────────────
-
-function toggleBT2Info() {
-  const select  = document.getElementById('tarifa-select');
-  const infoBox = document.getElementById('bt2-info');
-  if (!select || !infoBox) return;
-  infoBox.classList.toggle('hidden', select.value !== 'BT2');
-}
-
-// ─── Selector de comunas ──────────────────────────────────
-
-const DIST_NOMBRES = {
-  enel:       'Enel (RM)',
-  cge:        'CGE',
-  chilquinta: 'Chilquinta (V Región)',
-  frontel:    'Frontel (La Araucanía)',
-};
-
-const DIST_VIGENCIA = {
-  enel:       'Tarifas verificadas — vigentes desde 01-04-2026',
-  cge:        'Tarifas verificadas — datos marzo 2025',
-  chilquinta: 'Tarifas verificadas — vigentes desde 01-03-2026',
-  frontel:    'Tarifas verificadas — vigentes desde 01-04-2026',
-};
-
-function normalizarTexto(s) {
-  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-}
-
-function buscarComuna(nombre) {
-  if (!window.COMUNAS_DATA || !nombre.trim()) return null;
-  const target = normalizarTexto(nombre.trim());
-  return window.COMUNAS_DATA.find(c => normalizarTexto(c.nombre) === target) || null;
-}
-
-function onComunaChange() {
-  const input      = document.getElementById('comuna-input');
-  const okIcon     = document.getElementById('comuna-ok');
-  const distLabel  = document.getElementById('dist-resuelta');
-  const fallback   = document.getElementById('dist-fallback');
-  const distSelect = document.getElementById('distribuidora-select');
-  const vigencia   = document.getElementById('tarifa-vigencia');
-
-  if (!input) return;
-  const comuna = buscarComuna(input.value);
-
-  if (comuna) {
-    // Encontrada: mostrar confirmación y ocultar fallback
-    const distNombre = DIST_NOMBRES[comuna.distribuidora_id] || comuna.distribuidora_id;
-    distLabel.textContent = `Distribuidora: ${distNombre}`;
-    distLabel.classList.remove('hidden');
-    fallback.classList.add('hidden');
-    okIcon.classList.remove('hidden');
-
-    // Sincronizar el select de fallback (aunque esté oculto) para que el POST tenga el valor
-    if (distSelect) distSelect.value = comuna.distribuidora_id;
-
-    // Mostrar vigencia
-    const msg = DIST_VIGENCIA[comuna.distribuidora_id];
-    if (vigencia) {
-      vigencia.textContent = msg || 'Tarifas estimadas — pendiente decreto oficial';
-    }
-  } else if (input.value.trim() === '') {
-    distLabel.classList.add('hidden');
-    fallback.classList.remove('hidden');
-    okIcon.classList.add('hidden');
-    if (vigencia) vigencia.textContent = '';
-  } else {
-    // Texto ingresado pero no se encontró la comuna
-    distLabel.textContent = 'Comuna no reconocida — selecciona la distribuidora abajo';
-    distLabel.classList.remove('hidden');
-    distLabel.classList.add('text-amber-600');
-    distLabel.classList.remove('text-electric-600');
-    fallback.classList.remove('hidden');
-    okIcon.classList.add('hidden');
-    if (vigencia) vigencia.textContent = '';
-  }
-}
-
-// ─── Validación del formulario ────────────────────────────
-
-function validarFormulario(e) {
-  const modo = document.getElementById('modo-input')?.value;
-
-  if (modo === 'kwh') {
-    const val = parseFloat(document.getElementById('kwh-directo-input')?.value);
-    if (!val || val <= 0) {
-      e.preventDefault();
-      const input = document.getElementById('kwh-directo-input');
-      input?.classList.add('ring-2', 'ring-red-400', 'border-red-400');
-      input?.focus();
-      return;
-    }
-  } else {
-    // Verificar que haya al menos un aparato seleccionado
-    const checks = document.querySelectorAll('.aparato-check:checked');
-    if (checks.length === 0) {
-      e.preventDefault();
-      alert('Selecciona al menos un aparato para estimar tu consumo.');
-    }
-  }
-}
-
-// ─── Inicialización ───────────────────────────────────────
-
-document.addEventListener('DOMContentLoaded', function () {
-
-  // Listener en aparatos
-  document.querySelectorAll('.aparato-item').forEach(item => {
-    const checkbox   = item.querySelector('.aparato-check');
-    const horasInput = item.querySelector('.horas-input');
-    const card       = item.querySelector('.aparato-card');
-
-    if (checkbox) {
-      checkbox.addEventListener('change', () => {
-        actualizarTarjeta(item);
-        calcularKwhAparatos();
-      });
-    }
-
-    if (horasInput) {
-      horasInput.addEventListener('input', calcularKwhAparatos);
-    }
-
-    // Click en la tarjeta (fuera del checkbox) también lo activa
-    if (card) {
-      card.addEventListener('click', function (e) {
-        if (e.target === horasInput || e.target === checkbox) return;
-        if (e.target.closest('.horas-input') || e.target.closest('.aparato-check')) return;
-        if (checkbox) {
-          checkbox.checked = !checkbox.checked;
-          actualizarTarjeta(item);
-          calcularKwhAparatos();
-        }
-      });
-    }
-  });
-
-  // Estado inicial de tarjetas (para precargados)
-  document.querySelectorAll('.aparato-item').forEach(actualizarTarjeta);
-  calcularKwhAparatos();
-
-  // Listener selector de tarifa
-  const tarifaSelect = document.getElementById('tarifa-select');
-  if (tarifaSelect) {
-    tarifaSelect.addEventListener('change', toggleBT2Info);
-    toggleBT2Info(); // estado inicial
-  }
-
-  // Listener buscador de comunas
-  const comunaInput = document.getElementById('comuna-input');
-  if (comunaInput) {
-    comunaInput.addEventListener('input', onComunaChange);
-    comunaInput.addEventListener('change', onComunaChange);
-    onComunaChange(); // estado inicial
-  }
-
-  // Validación del form
-  const form = document.getElementById('calc-form');
-  if (form) form.addEventListener('submit', validarFormulario);
-
-  // Limpiar estilo error al escribir
-  const kwhInput = document.getElementById('kwh-directo-input');
-  if (kwhInput) {
-    kwhInput.addEventListener('input', () => {
-      kwhInput.classList.remove('ring-2', 'ring-red-400', 'border-red-400');
+"use strict";
+const $ = (id) => document.getElementById(id);
+const money = (n) =>
+  new Intl.NumberFormat("es-CL", {
+    style: "currency",
+    currency: "CLP",
+    maximumFractionDigits: 0,
+  }).format(n);
+const form = $("calculator-form");
+if (form) {
+  const setMode = (mode) => {
+    $("modo").value = mode;
+    $("panel-kwh").hidden = mode !== "kwh";
+    $("panel-aparatos").hidden = mode !== "aparatos";
+    $("kwh_directo").required = mode === "kwh";
+    $("kwh_directo").disabled = mode !== "kwh";
+    document
+      .querySelectorAll("[data-mode]")
+      .forEach((b) =>
+        b.setAttribute("aria-pressed", String(b.dataset.mode === mode)),
+      );
+    document.querySelectorAll(".appliance-row").forEach((row) => {
+      row.querySelector("[type=number]").disabled =
+        mode !== "aparatos" || !row.querySelector("[type=checkbox]").checked;
     });
-  }
-});
+  };
+  document
+    .querySelectorAll("[data-mode]")
+    .forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
+  setMode($("modo").value === "aparatos" ? "aparatos" : "kwh");
+  document.querySelectorAll("[data-kwh]").forEach((b) =>
+    b.addEventListener("click", () => {
+      $("kwh_directo").value = b.dataset.kwh;
+    }),
+  );
+  const setPrices = () => {
+    const custom = $("fuente").value === "personalizada";
+    $("custom-prices").hidden = !custom;
+    $("reference-notice").hidden = custom;
+    ["precio_kwh", "cargo_fijo"].forEach((id) => {
+      $(id).required = custom;
+      $(id).disabled = !custom;
+    });
+  };
+  $("fuente").addEventListener("change", setPrices);
+  setPrices();
+  const appliances = () => {
+    let total = 0;
+    document.querySelectorAll(".appliance-row").forEach((row) => {
+      const check = row.querySelector("[type=checkbox]"),
+        hours = row.querySelector("[type=number]");
+      hours.disabled = !check.checked || $("modo").value !== "aparatos";
+      if (check.checked)
+        total +=
+          (Number(check.dataset.watts) / 1000) *
+          Number(hours.value) *
+          Number($("dias").value);
+    });
+    $("appliance-kwh").textContent =
+      new Intl.NumberFormat("es-CL", { maximumFractionDigits: 1 }).format(
+        total,
+      ) + " kWh";
+  };
+  form.addEventListener("input", appliances);
+  appliances();
+  form.addEventListener("submit", () => {
+    const b = form.querySelector("[type=submit]");
+    b.disabled = true;
+    b.textContent = "Preparando tu estimación…";
+  });
+  window.addEventListener("pageshow", () => {
+    const b = form.querySelector("[type=submit]");
+    b.disabled = false;
+    b.textContent = "Entender mi cuenta ↗";
+  });
+  $("form-error")?.focus();
+}
+
+const search = $("buscar-comuna");
+if (search) {
+  const normalize = (s) =>
+    s
+      .toLocaleLowerCase("es")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  search.addEventListener("input", () => {
+    let count = 0;
+    const q = normalize(search.value.trim());
+    document.querySelectorAll(".comuna-tag").forEach((tag) => {
+      tag.hidden = !normalize(tag.dataset.nombre).includes(q);
+      if (!tag.hidden) count++;
+    });
+    document.querySelectorAll(".dist-card").forEach((card) => {
+      card.hidden = ![...card.querySelectorAll(".comuna-tag")].some(
+        (t) => !t.hidden,
+      );
+    });
+    $("search-count").textContent =
+      count + " coincidencias en el directorio nacional";
+    $("search-empty").hidden = count > 0;
+  });
+}
+
+const dataElement = $("estimate-data");
+if (dataElement) {
+  const result = JSON.parse(dataElement.textContent);
+  $("print-result").addEventListener("click", () => {
+    document.querySelector(".calculation-details").open = true;
+    window.print();
+  });
+  $("export-csv").addEventListener("click", () => {
+    const rows = [
+      ["CuentaLuz Chile", "Estimación referencial"],
+      ["Fecha", result.fecha],
+      ["Distribuidora", result.distribuidora],
+      ["Base", result.entrada.fuente],
+      ["Consumo (kWh)", result.entrada.kwh],
+      ["Días", result.entrada.dias],
+      [
+        "Boleta informada (CLP)",
+        result.entrada.boleta_actual ?? "No informada",
+      ],
+      [
+        "Precio personalizado ($/kWh)",
+        result.entrada.precio_kwh ?? "No aplica",
+      ],
+      [
+        "Cargo fijo personalizado ($)",
+        result.entrada.cargo_fijo ?? "No aplica",
+      ],
+      [
+        "Fuente",
+        result.entrada.fuente === "referencia"
+          ? result.tarifa.fuente
+          : "Precios ingresados por el usuario",
+      ],
+      [
+        "Vigente desde",
+        result.entrada.fuente === "referencia"
+          ? result.tarifa.vigente_desde
+          : "No aplica",
+      ],
+      [
+        "Vigente hasta",
+        result.entrada.fuente === "referencia"
+          ? result.tarifa.vigente_hasta
+          : "No aplica",
+      ],
+      ["Componente", "Importe final CLP"],
+      ...result.componentes.map((c) => [c.nombre, c.valor]),
+      ["Total", result.total],
+      ["Metodología", result.metodologia],
+      [
+        "Alcance",
+        "No incluye saldos anteriores, subsidios ni otros ajustes particulares.",
+      ],
+      ["Reducción de consumo (%)", "Nuevo total CLP", "Ahorro CLP"],
+      ...result.escenarios.map((e) => [e.reduccion, e.total, e.ahorro]),
+    ];
+    const csv =
+      "\ufeff" +
+      rows
+        .map((r) =>
+          r
+            .map((v) => '"' + String(v ?? "").replaceAll('"', '""') + '"')
+            .join(";"),
+        )
+        .join("\r\n");
+    const url = URL.createObjectURL(
+      new Blob([csv], { type: "text/csv;charset=utf-8;" }),
+    );
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "CuentaLuz-" + result.fecha + ".csv";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+  let timer,
+    controller,
+    sequence = 0;
+  $("saving-slider").addEventListener("input", () => {
+    const reduction = Number($("saving-slider").value);
+    $("saving-percent").textContent = reduction + " %";
+    $("saving-total").textContent = "Calculando…";
+    $("saving-error").hidden = true;
+    clearTimeout(timer);
+    controller?.abort();
+    const current = ++sequence;
+    timer = setTimeout(async () => {
+      controller = new AbortController();
+      try {
+        const response = await fetch("/api/estimar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...result.entrada,
+            kwh: result.entrada.kwh * (1 - reduction / 100),
+          }),
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error("estimate");
+        const next = await response.json();
+        if (current !== sequence) return;
+        $("saving-total").textContent = money(next.total);
+        $("saving-detail").textContent =
+          new Intl.NumberFormat("es-CL", { maximumFractionDigits: 1 }).format(
+            next.entrada.kwh,
+          ) +
+          " kWh · ahorro de " +
+          money(result.total - next.total);
+      } catch (error) {
+        if (error.name !== "AbortError" && current === sequence) {
+          $("saving-total").textContent = "—";
+          $("saving-error").textContent =
+            "No pudimos actualizar el escenario. Mueve el control para reintentar.";
+          $("saving-error").hidden = false;
+        }
+      }
+    }, 250);
+  });
+}

@@ -1,0 +1,58 @@
+{
+  "estado": "candidatos_sin_aprobar",
+  "documentos": 12,
+  "candidatos": 63120,
+  "sha256_datos": "8a8e5693185f45bf3a86f76fe019ccdac3726e45fb166b8e3fea6a12e6c0a859",
+  "por_empresa": {
+    "edelaysen": 4080,
+    "frontel": 29250,
+    "luzosorno": 4950,
+    "saesa": 24840
+  },
+  "por_periodo": {
+    "2026-09": 21040,
+    "2026-10": 21040,
+    "2026-11": 21040
+  },
+  "comunas_cut_distintas": 113,
+  "comunas_sin_valores_en_lote": 233,
+  "matriz_archivo": "artifacts/normalizacion/matriz-comunas-8a8e5693185f45bf.csv",
+  "territorios_sin_cut": [
+    "Aisén - Aéreo",
+    "Alto Bío Bío - Aéreo",
+    "Coihaique - Aéreo",
+    "S. Juan De La Costa - Aéreo",
+    "Sta. Bárbara - Aéreo"
+  ],
+  "secciones_originales": [
+    "Tarifa AT 4.1, 4.2, 4.3",
+    "Tarifa AT 4.1, 4.2, 4.3  (***)",
+    "Tarifa AT 4.1, 4.2, 4.3 (***)",
+    "Tarifa AT2 y AT3",
+    "Tarifa AT5 (*)",
+    "Tarifa AT5 (**)",
+    "Tarifa AT6",
+    "Tarifa BT 4.1, 4.2, 4.3",
+    "Tarifa BT 4.1, 4.2, 4.3 (***)",
+    "Tarifa BT1",
+    "Tarifa BT1 y ECOSUR (BT1 ECO) (*)",
+    "Tarifa BT2 y BT3",
+    "Tarifa BT5 (*)",
+    "Tarifa BT5 (**)",
+    "Tarifa BT6",
+    "Tarifa TRAT",
+    "Tarifa TRAT1",
+    "Tarifa TRAT2 (**)",
+    "Tarifa TRAT2-TRAT3 (*)",
+    "Tarifa TRAT2-TRAT3 (**)",
+    "Tarifa TRAT3 (**)",
+    "Tarifa TRBT",
+    "Tarifa TRBT2 (**)",
+    "Tarifa TRBT2 - TRBT3 (*)",
+    "Tarifa TRBT2 - TRBT3 (**)",
+    "Tarifa TRBT3 (**)"
+  ],
+  "incidencias": 786,
+  "perfiles_aprobados": 0,
+  "alcance": "Extracción del diseño Pub. PDF de suministro regulado; conserva alternativas y agregados. No sumar filas indiscriminadamente. Faltan impuesto de cada componente, red normalizada, condiciones, vigencia final y validación contra PDF y facturas. No habilita cálculo oficial."
+}
