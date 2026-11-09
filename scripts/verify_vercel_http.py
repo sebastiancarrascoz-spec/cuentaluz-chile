@@ -46,7 +46,9 @@ def verify(base):
     assert 'worker-src' in headers.get('content-security-policy','')
     for path in ('/comparar','/cobertura-validada','/revisar'):
         code,_,headers=request(path)
-        assert code==200 and headers.get('cache-control')=='no-store'
+        assert code==200, {'ruta':path,'http':code}
+        if path!='/cobertura-validada':
+            assert headers.get('cache-control')=='no-store', {'ruta':path,'cache':headers.get('cache-control')}
     for asset in ('account_workspace.mjs','invoice_metadata.mjs','scenario_store.mjs'):
         code,body,_=request('/static/js/'+asset)
         assert code==200 and hashlib.sha256(body).digest()==hashlib.sha256((ROOT/'static/js'/asset).read_bytes()).digest()

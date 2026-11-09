@@ -6,6 +6,16 @@ Proyecto: `cuentaluz-chile-preview`, equipo personal `sebastiancarrascoz-spec`, 
 
 ## Resultado verificado del 9 de noviembre
 
+### Actualización de las siete mejoras
+
+- Vista previa más reciente: https://cuentaluz-chile-preview-m5kyajmno-sebastiancarrascoz-spec.vercel.app . Despliegue `dpl_HyFDNjPGLoabeZw4pTYFNGBksWCm`, entorno Preview, estado final `READY`, Python 3.12 y construcción de 13,2 segundos. Vercel Authentication conservado; puede requerir iniciar sesión.
+- Código desplegado: local `49bb4299450992fa9ee191db42213752b8093b97`, árbol `47a00cac31a5862db4300fcb807825767e5eb190`, idéntico al remoto `fecc0c14e27407e244b357b412d51b1a15f7b77b`. Las posteriores correcciones del verificador HTTP y documentación no cambian la aplicación desplegada.
+- CI de ese código aprobada: https://github.com/sebastiancarrascoz-spec/cuentaluz-chile/actions/runs/42646334842 . Pasaron pruebas Python/JavaScript, auditoría, construcción, arranque, controles HTTP, respaldo/restauración y reinicio Docker.
+- Pasaron 17 controles HTTP autenticados sobre esta URL, incluyendo nuevas rutas y APIs, hashes de módulos y worker, bloqueo del catálogo y docs, y cabeceras de privacidad. Evidencia local: `artifacts/vercel-http-report.json`. No se hizo inspección visual de navegador remoto.
+- Funciones nuevas y límites en `MEJORAS_20261109.md`. El historial opcional pertenece al origen de cada URL. Este despliegue no promueve dominios ni aprueba tarifas oficiales.
+
+### Primer despliegue de pruebas
+
 Sebastián autorizó expresamente el primer despliegue técnico Production del proyecto separado de pruebas. Se ejecutó con `--skip-domain`, sin promoción de dominios ni contratación de servicios. La aplicación conserva `APP_PREVIEW=1`, aviso de pruebas, `noindex`, catálogo bloqueado y cálculo sin persistencia.
 
 - URL: https://cuentaluz-chile-preview-eep78iloq-sebastiancarrascoz-spec.vercel.app

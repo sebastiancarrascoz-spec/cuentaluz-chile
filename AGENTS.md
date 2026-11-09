@@ -5,10 +5,10 @@ Proyecto independiente de Inergy, ARBA y del trabajo con el empleador. Leer `PRO
 ## Última actualización: siete mejoras del 9 de noviembre de 2026
 
 - Leer `MEJORAS_20261109.md`: diferencias por cargo, metadatos expresos del PDF local, inicio guiado, cobertura filtrable, historial opcional, informe e interfaz de comparación de alternativas declaradas.
-- 248 pruebas Python aprobadas, cinco antiguas omitidas; 18 JavaScript aprobadas. Pruebas de navegador, PDF y paquete documentadas allí. Falta registrar nuevo despliegue Preview y CI; no confundir con el anterior.
+- 248 pruebas Python aprobadas, cinco antiguas omitidas; 18 JavaScript aprobadas. Pruebas de navegador, PDF y paquete documentadas allí. Nuevo Preview `dpl_HyFDNjPGLoabeZw4pTYFNGBksWCm` READY: https://cuentaluz-chile-preview-m5kyajmno-sebastiancarrascoz-spec.vercel.app . Pasaron 17 controles HTTP autenticados. CI del código `fecc0c14e27407e244b357b412d51b1a15f7b77b` aprobada, ejecución `42646334842`, incluido Docker. Ver `VERCEL.md`.
 - Biblioteca: 362 documentos y cero perfiles aprobados. `config/perfiles_aprobados.json` vacío. No inferir red, ETR ni elegibilidad. Conservar el peso pendiente de electricidad Enel.
 - Historial local opcional: diez escenarios, mismo origen, sin notas libres ni identificadores. Informe por impresión nativa. Comparaciones sin recomendaciones contractuales.
-- Próximo despliegue: Preview en el proyecto existente, protegido, sin dominios ni contratación. La autorización Production anterior resolvió el primer despliegue obligatorio.
+- Despliegues posteriores: Preview en el proyecto existente, protegido, sin dominios ni contratación. La autorización Production anterior resolvió el primer despliegue obligatorio. El árbol del código desplegado corresponde al local `49bb429`; documentación y correctivo del verificador HTTP posteriores no cambian la aplicación.
 
 ## Actualización del 9 de noviembre de 2026: vista previa Vercel
 

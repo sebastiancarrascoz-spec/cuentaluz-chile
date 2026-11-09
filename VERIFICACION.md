@@ -4,7 +4,7 @@ Fecha: 7 de noviembre de 2026. Entorno de aplicación: Windows, Python 3.11, SQL
 
 ## Ampliación nacional: resultados posteriores a la v2 inicial
 
-9 de noviembre, espacio de trabajo: **248 pruebas Python aprobadas, cinco omitidas y 18 JavaScript aprobadas**. Los siete cambios, navegador, informe de dos páginas y límites constan en [MEJORAS_20261109.md](MEJORAS_20261109.md). El lector privado pasó en móvil y escritorio y conservó 145 kWh después de comprobar los importes. Ninguna prueba convierte candidatos en precios aprobados. El nuevo despliegue y su CI se registrarán cuando terminen.
+9 de noviembre, espacio de trabajo: **248 pruebas Python aprobadas, cinco omitidas y 18 JavaScript aprobadas**. Los siete cambios, navegador, informe de dos páginas y límites constan en [MEJORAS_20261109.md](MEJORAS_20261109.md). El lector privado pasó en móvil y escritorio y conservó 145 kWh después de comprobar los importes. Nueva vista previa READY y 17 controles HTTP autenticados aprobados; CI `42646334842` aprobada, incluido Docker. URL y trazabilidad en `VERCEL.md`. Ninguna prueba convierte candidatos en precios aprobados.
 
 9 de noviembre, adaptación Vercel: **232 pruebas Python aprobadas, cinco antiguas omitidas**. El despliegue `dpl_Gdp7q3HmC1QFZxcv7oEKa5SnRufA` terminó `READY` con Python 3.12. Comprobaciones HTTP autenticadas: salud, cuenta, CSS y worker 200; hash del worker coincidente; escenario propio 60.750 y consolidado ficticio 13.785; catálogo sin aprobación 503 y docs 404. Se conservaron `no-store`, CSP y `noindex`. Protección de Vercel activa. Evidencia en `artifacts/vercel-http-report.json`. Se distingue de una inspección visual remota y de validación de precios oficiales. El corpus real no se amplió ni se envió la factura privada a Vercel.
 
