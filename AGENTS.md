@@ -4,6 +4,11 @@ Proyecto independiente de Inergy, ARBA y del trabajo con el empleador. Leer `PRO
 
 ## Actualización del 9 de noviembre de 2026: vista previa Vercel
 
+- Resultado posterior: Sebastián autorizó «Sí, desplegar el proyecto de pruebas» cuando Vercel exigió que el primer despliegue fuera Production. Se ejecutó en el proyecto separado con `--skip-domain`, `APP_PREVIEW=1` y sin contratar servicios. URL operativa protegida: https://cuentaluz-chile-preview-eep78iloq-sebastiancarrascoz-spec.vercel.app ; despliegue `dpl_Gdp7q3HmC1QFZxcv7oEKa5SnRufA`, `READY`, Python 3.12. No interpretar este Production técnico como lanzamiento tarifario aprobado.
+- Pasaron comprobaciones HTTP autenticadas: salud y cuenta 200, CSS y worker 200 con hash coincidente, propios 60.750, consolidada ficticia 13.785, catálogo 503 y docs 404; `no-store`, CSP y `noindex`. No se hizo inspección visual remota. Estado y evidencias en `artifacts/vercel-preview-state.json` y `artifacts/vercel-http-report.json`.
+- El constructor exigió `requirements.txt` plano: mismas veinte versiones que `requirements.lock`; script generador actualiza ambos. Nuevo test evita divergencia. Primer build fallido conservado, segundo correcto con aplicación del commit local `c58913f`.
+- Vercel CLI generó un secreto de automatización al usar `vercel curl`; no se imprimió ni se guardó en Git. Vercel Authentication sigue activo. El MCP del plugin no autorizó este equipo (403); la CLI sí estaba autenticada en la cuenta propia y completó las pruebas.
+
 - Sebastián pidió ver la app en línea y usar Vercel; confirmó que tiene cuenta. Esta solicitud autoriza una vista previa y reemplaza la espera anterior para esa finalidad. El lanzamiento definitivo, servicios pagados y tarifas oficiales siguen pendientes.
 - Leer `VERCEL.md`. Proyecto verificado `cuentaluz-chile-preview`, equipo personal `sebastiancarrascoz-spec`, plan Hobby actual. La CLI ya estaba autenticada; no leer ni copiar credenciales. CLI 65.12.1 instalada en `.qa/vercel-cli`, fuera del paquete.
 - Se añadió `APP_STORAGE=none`, omitiendo tablas y conexiones en arranque/salud y rechazando sesiones DB. `vercel.json` fija modo producción, cálculo sin persistencia y Python 3.12. Los hosts Vercel se aceptan por nombres exactos de variables de sistema, nunca por comodín. Vista previa con rótulo y `noindex`.

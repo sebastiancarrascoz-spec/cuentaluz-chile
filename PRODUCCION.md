@@ -4,6 +4,8 @@ Fecha: 7 de noviembre de 2026. Rama local: `mejora/produccion-v2`.
 
 ## Actualización nacional
 
+9 de noviembre: Sebastián autorizó alojar un proyecto separado de pruebas en Vercel, incluido su primer despliegue técnico Production exigido por la plataforma. La [versión de pruebas](https://cuentaluz-chile-preview-eep78iloq-sebastiancarrascoz-spec.vercel.app) está `READY` en Python 3.12, protegida con Vercel Authentication, sin persistencia local ni promoción de dominios. Pasaron salud, assets y cálculos HTTP ficticios. Esto no lanza una calculadora nacional validada. Ver [VERCEL.md](VERCEL.md); las referencias previas a ausencia de hosting corresponden al estado anterior.
+
 8 de noviembre, avance ordenado: leer [PLAN_PRODUCCION.md](PLAN_PRODUCCION.md), [CUENTA_CONSOLIDADA.md](CUENTA_CONSOLIDADA.md), [NORMALIZACION_NACIONAL.md](NORMALIZACION_NACIONAL.md) y [OPERACION.md](OPERACION.md). La cuenta consolidada ya integra demanda e impuestos con datos declarados; 63.120 celdas de precio de cuatro empresas están normalizadas como candidatos. El corpus tiene una factura real anonimizada. Se comprobó respaldo/restauración SQLite y pasaron las pruebas de arranque/reinicio del contenedor en CI remota. No hay todavía perfiles oficiales aprobados ni despliegue público comprobado.
 
 BT3/AT3: `/demanda-3` añade una revisión del cargo neto de demanda con precio e históricos declarados. Mantiene separadas la demanda base en kW y el mínimo monetario. Si la ventana histórica altera el resultado y no está confirmada, muestra las alternativas sin devolver un cargo único. El resultado no incluye IVA ni otros cargos de la cuenta. No activa un perfil oficial: la ventana y la aplicabilidad siguen pendientes de cotejo. Ver [DEMANDA_BT3_AT3.md](DEMANDA_BT3_AT3.md).

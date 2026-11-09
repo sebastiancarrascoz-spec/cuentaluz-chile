@@ -2,6 +2,8 @@
 
 Aplicación web residencial para entender el consumo, explorar un desglose y simular ahorro. FastAPI + Jinja2, CSS y JavaScript propios, sin recursos externos ni registro obligatorio.
 
+**[Abrir versión de pruebas en Vercel](https://cuentaluz-chile-preview-eep78iloq-sebastiancarrascoz-spec.vercel.app)**. Conserva Vercel Authentication y puede pedir iniciar sesión con la cuenta propietaria. Usa precios declarados; las tarifas oficiales siguen pendientes. Configuración y pruebas en [VERCEL.md](VERCEL.md).
+
 Actualización nacional: [362 documentos públicos respaldados y cobertura de 346 comunas](RESPALDOS_NACIONALES.md), con alcance comercial e industrial en investigación. `/fuentes` muestra los originales y sus hashes; `/revisar` concilia netos, IVA y exentos. El motor por componentes exige contexto y cantidades facturables, pero los modelos nacionales siguen pendientes de aprobación. El catálogo histórico no debe interpretarse como precio vigente.
 
 ## Ver la aplicación local

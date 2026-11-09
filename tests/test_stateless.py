@@ -8,6 +8,13 @@ import pytest
 ROOT=Path(__file__).resolve().parents[1]
 
 
+def test_vercel_requirements_are_flat_and_match_container_lock():
+    def packages(name):
+        return [line.strip() for line in (ROOT/name).read_text(encoding='utf-8').splitlines() if line.strip() and not line.startswith('#')]
+    assert packages('requirements.txt')==packages('requirements.lock')
+    assert all('==' in line and not line.startswith('-') for line in packages('requirements.txt'))
+
+
 def run(code, **extra):
     env={**os.environ,"APP_STORAGE":"none","APP_ENV":"production","VERCEL":"1","VERCEL_ENV":"preview",
         "VERCEL_URL":"cuentaluz-prueba.vercel.app", **extra}

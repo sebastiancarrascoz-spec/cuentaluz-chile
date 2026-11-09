@@ -4,6 +4,18 @@ Solicitud de Sebastián del 9 de noviembre de 2026: poder ver la aplicación en 
 
 Proyecto: `cuentaluz-chile-preview`, equipo personal `sebastiancarrascoz-spec`, plan Hobby existente. No se contrata base de datos ni dominio. La URL y el resultado efectivo del despliegue se registran en `artifacts/vercel-preview-state.json`; no confundir una configuración preparada con una publicación verificada.
 
+## Resultado verificado del 9 de noviembre
+
+Sebastián autorizó expresamente el primer despliegue técnico Production del proyecto separado de pruebas. Se ejecutó con `--skip-domain`, sin promoción de dominios ni contratación de servicios. La aplicación conserva `APP_PREVIEW=1`, aviso de pruebas, `noindex`, catálogo bloqueado y cálculo sin persistencia.
+
+- URL: https://cuentaluz-chile-preview-eep78iloq-sebastiancarrascoz-spec.vercel.app
+- Despliegue: `dpl_Gdp7q3HmC1QFZxcv7oEKa5SnRufA`, estado `READY`, Python 3.12, construcción aproximada de 11,5 segundos.
+- Código de aplicación desplegado: commit local `c58913fed7a739a63d4bc95b8881916e346ecdc2`.
+- Se conserva la protección de Vercel Authentication: el usuario puede necesitar iniciar sesión con la cuenta propietaria para abrirlo. No se desactivó para probar.
+- Salud, HTML de cuenta, CSS y worker PDF.js respondieron 200. El hash del worker coincide con el local. Precios propios: 60.750; cuenta consolidada ficticia: 13.785; catálogo no aprobado: 503; documentación API cerrada: 404. Se comprobaron `no-store`, CSP y `noindex`. Evidencia: `artifacts/vercel-http-report.json`. Estas son pruebas HTTP, sin afirmar inspección visual remota ni validación tarifaria.
+- El primer intento falló porque el constructor no aceptó `-r requirements.lock`. Se conservan las mismas veinte versiones en formato plano en `requirements.txt`; `lock_runtime.py` actualiza ambos archivos y una prueba comprueba su correspondencia.
+- La CLI creó un secreto de Protection Bypass for Automation al ejecutar `vercel curl`. No se imprimió ni se incorporó a Git. Se conserva para las comprobaciones autenticadas del proyecto; puede revocarse en Deployment Protection. La conexión MCP del plugin devolvió 403 para este equipo; se usó la CLI previamente autenticada, sin cambiar de cuenta ni extraer credenciales.
+
 ## Configuración
 
 - FastAPI mediante `main.py`, Python 3.12 y dependencias de `requirements.lock`. Fuentes: [FastAPI en Vercel](https://vercel.com/docs/frameworks/backend/fastapi) y [runtime Python](https://vercel.com/docs/functions/runtimes/python).
@@ -21,6 +33,6 @@ CLI de preparación: Vercel 65.12.1, instalada solo en `.qa/vercel-cli`, fuera d
 
 Desplegar al entorno `preview` del proyecto indicado. Verificar estado final, inicio, assets locales, cuenta con precios declarados y rechazo del catálogo pendiente. Si la protección devuelve una pantalla de acceso, utilizar el mecanismo oficial de Vercel para probar el despliegue y explicar al usuario que puede necesitar iniciar sesión.
 
-Vercel rechazó la primera petición al entorno `preview`: su CLI exige que el primer despliegue de un proyecto vacío sea `Production`. Ese cambio requiere aprobación explícita antes de ejecutarlo; no repetir automáticamente con `--prod`. Se preparó `APP_PREVIEW=1` para mantener rótulo y `noindex` incluso si el usuario autoriza el entorno técnico Production del proyecto de pruebas. Usar `--skip-domain` para no asignar dominios automáticamente en ese primer despliegue. No promover dominios, comprarlos ni contratar almacenamiento dentro de este alcance.
+Vercel rechazó la primera petición al entorno `preview`: su CLI exige que el primer despliegue de un proyecto vacío sea `Production`. Sebastián aprobó esa excepción para este proyecto de pruebas, conservando `APP_PREVIEW=1` y `--skip-domain`. Para cambios posteriores usar preferentemente el entorno Preview y comprobar el destino antes de ejecutar. La excepción no autoriza lanzar tarifas oficiales, promover dominios, comprarlos ni contratar almacenamiento.
 
 Las tarifas oficiales siguen pendientes y el caso Enel no está completamente validado. Para guardar datos en una futura versión se necesita un almacenamiento persistente revisado, sus controles y pruebas; no activar SQLite local dentro de las funciones.
