@@ -1,0 +1,15 @@
+[
+  {
+    "id": "edecsa_peajes_octubre",
+    "proveedor": "edecsa",
+    "clase": "pliego",
+    "url": "https://legales.cooperativa.cl/wp-content/uploads/2026/09/VERSI%C3%93N-IMPRESA-TARIFAS-DE-PEAJES-DE-DISTRIBUCI%C3%93N-EDECSA.pdf",
+    "contexto": "Publicación legal de la distribuidora; peajes, no suministro completo."
+  },
+  {
+    "id": "mataquito_indice",
+    "proveedor": "mataquito",
+    "clase": "indice",
+    "url": "https://ingmataquito.cl/"
+  }
+]

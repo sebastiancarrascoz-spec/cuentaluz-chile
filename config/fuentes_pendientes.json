@@ -1,0 +1,6 @@
+[
+  {"id":"crell_suministro2026","proveedor":"crell","clase":"indice","url":"https://www.crell.cl/c_tarifarios_detalle.php?a=2026&c=1"},
+  {"id":"crell_servicios2026","proveedor":"crell","clase":"indice","url":"https://www.crell.cl/c_tarifarios_detalle.php?a=2026&c=2"},
+  {"id":"sasipa_tarifas","proveedor":"sasipa","clase":"indice","url":"https://www.sasipa.cl/tarifas/electricidad/"},
+  {"id":"cec_inicio","proveedor":"cec","clase":"indice","url":"https://cecltda.cl/"}
+]

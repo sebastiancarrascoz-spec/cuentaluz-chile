@@ -1,0 +1,7 @@
+[
+  {"id":"saesa_grupo_202611","proveedor":"grupo_saesa","clase":"pliego","url":"https://webserver-websaesa-prd.lfr.cloud/documents/37727/10411315/2026.11.zip/1a7851e8-9c4e-c67b-ff67-160f44c73810?t=1793195198468","origen":"https://web.gruposaesa.cl/es/web/frontel/pago-y-boleta/tarifas-vigentes"},
+  {"id":"saesa_grupo_202610","proveedor":"grupo_saesa","clase":"pliego","url":"https://webserver-websaesa-prd.lfr.cloud/documents/37727/10411315/2026.10.zip/23856b36-4b45-704e-3e11-921089760706?t=1790706798546","origen":"https://web.gruposaesa.cl/es/web/frontel/pago-y-boleta/tarifas-vigentes"},
+  {"id":"saesa_grupo_202609","proveedor":"grupo_saesa","clase":"pliego","url":"https://webserver-websaesa-prd.lfr.cloud/documents/37727/10411315/2026.09.zip/57a73738-3c8e-ee08-613b-613e3c9e9448?t=1790706807738","origen":"https://web.gruposaesa.cl/es/web/frontel/pago-y-boleta/tarifas-vigentes"},
+  {"id":"cne_decreto5t2024","proveedor":"cne","clase":"normativa","url":"https://www.cne.cl/wp-content/uploads/2025/08/Decreto-5T-2024-Toma-de-razon-1.pdf"},
+  {"id":"crell_2026_tipos","proveedor":"crell","clase":"indice","url":"https://www.crell.cl/c_tarifarios_tipos","metodo":"POST","datos":{"btn_anio":"2026"},"origen":"https://www.crell.cl/c_tarifarios"}
+]

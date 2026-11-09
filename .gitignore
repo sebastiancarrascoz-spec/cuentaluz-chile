@@ -12,6 +12,10 @@ build/
 # Entorno virtual
 venv/
 .venv/
+.qa/
+.vercel/
+artifacts/
+data/revision/
 env/
 ENV/
 

@@ -1,342 +1,48 @@
 {% extends "base.html" %}
-{% block title %}CuentaLuz Chile – Calcula tu boleta eléctrica{% endblock %}
-
 {% block content %}
-
-<!-- ===== HERO ===== -->
-<section class="text-center py-8 sm:py-12">
-  <div class="inline-flex items-center gap-2 bg-electric-100 text-electric-700 rounded-full px-4 py-1.5 text-sm font-semibold mb-5">
-    ⚡ Calculadora gratuita · Sin registro
+<section class="hero">
+  <div class="hero-copy"><p class="eyebrow"><span class="status-dot"></span> MENOS DUDAS, MÁS CLARIDAD</p>
+    <h1>Tu cuenta de luz,<br><em>sin enredos.</em></h1>
+    <p class="lead">Entiende en qué se va tu energía y descubre qué cambia cuando consumes menos.</p>
+    <div class="hero-proof"><span>↗ Desglose transparente</span><span>◎ Sin registro</span><span>⌁ Hecho para Chile</span></div>
   </div>
-  <h1 class="text-3xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-4">
-    ¿Cuánto pagas <span class="text-electric-600">realmente</span><br class="hidden sm:block"> de luz?
-  </h1>
-  <p class="text-gray-500 text-lg sm:text-xl max-w-lg mx-auto leading-relaxed">
-    Ingresa tu consumo o estima por aparatos y obtén el desglose exacto de tu boleta en segundos.
-  </p>
+  <div class="energy-art" aria-hidden="true">
+    <div class="art-grid"></div><div class="art-sun"></div>
+    <svg viewBox="0 0 420 265" fill="none"><path d="M72 139 202 39l135 100" stroke="#204e45" stroke-width="3"/><path d="M93 124v119h224V124" fill="#f6f5ed" stroke="#204e45" stroke-width="3"/><path d="m84 129 119-91 124 91" stroke="#204e45" stroke-width="12" stroke-linejoin="round"/><path d="m159 63 42-31 76 58-43 32z" fill="#204e45" stroke="#f6f5ed" stroke-width="2"/><path d="m174 51 76 57m-62-67 76 57m-90-34 42-31m-23 45 42-31m-22 46 42-31" stroke="#92af9b"/><path d="M189 243v-75h48v75" fill="#c0d48c" stroke="#204e45" stroke-width="3"/><path d="M116 157h43v42h-43zm144 0h33v42h-33z" fill="#e3e9de" stroke="#204e45" stroke-width="3"/><path d="M137 158v40m-20-20h42m117-20v40" stroke="#204e45" stroke-width="2"/><path d="M55 244h306" stroke="#204e45" stroke-width="3"/><path d="M65 242v-43m0 24-15-12m15-1 14-15m254 48v-54m0 33 15-14m-15 0-12-12" stroke="#77996c" stroke-width="4" stroke-linecap="round"/></svg>
+    <span class="art-label"><span class="status-dot"></span> Cada kWh cuenta</span>
+    <span class="art-note">HOGAR EFICIENTE<br><b>Energía bien entendida.</b></span>
+  </div>
 </section>
 
-<!-- ===== ERROR ===== -->
-{% if error %}
-<div class="max-w-2xl mx-auto mb-4">
-  <div class="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm font-medium">
-    ⚠️ {{ error }}
-  </div>
-</div>
-{% endif %}
-
-<!-- ===== CALCULADORA ===== -->
-<div class="max-w-2xl mx-auto">
-  <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-
-    <!-- TABS -->
-    <div class="flex border-b border-gray-200 bg-gray-50" role="tablist">
-      <button type="button" id="tab-kwh"
-              onclick="switchTab('kwh')"
-              class="tab-btn flex-1 py-3.5 px-4 text-sm font-semibold text-electric-600 border-b-2 border-electric-600 bg-white transition-all"
-              role="tab" aria-selected="true">
-        📄 Tengo mi boleta
-      </button>
-      <button type="button" id="tab-aparatos"
-              onclick="switchTab('aparatos')"
-              class="tab-btn flex-1 py-3.5 px-4 text-sm font-semibold text-gray-500 hover:text-gray-700 border-b-2 border-transparent transition-all"
-              role="tab" aria-selected="false">
-        🏠 Estimar por aparatos
-      </button>
-    </div>
-
-    <form action="/calcular" method="POST" id="calc-form" class="p-5 sm:p-7" novalidate>
-      <input type="hidden" name="modo" id="modo-input" value="kwh" />
-
-      <!-- ── MODO 1: kWh directo ── -->
-      <div id="panel-kwh" role="tabpanel">
-        <label class="block text-sm font-semibold text-gray-700 mb-2" for="kwh-directo-input">
-          Consumo del mes (busca "kWh" en tu boleta)
-        </label>
-        <div class="relative">
-          <input type="number" name="kwh_directo" id="kwh-directo-input"
-                 min="1" max="5000" step="1" placeholder="ej: 250"
-                 class="w-full border border-gray-300 rounded-xl px-4 py-3.5 pr-24 text-2xl font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-electric-500 focus:border-transparent transition" />
-          <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-semibold">kWh/mes</span>
-        </div>
-        <p class="mt-2 text-xs text-gray-400">
-          💡 Busca el ítem <strong>"Energía Activa"</strong> o simplemente <strong>"kWh"</strong> en tu última boleta.
-        </p>
-      </div>
-
-      <!-- ── MODO 2: Aparatos ── -->
-      <div id="panel-aparatos" class="hidden" role="tabpanel">
-        <!-- Indicador de kWh en tiempo real -->
-        <div class="flex items-center justify-between mb-4">
-          <p class="text-sm font-semibold text-gray-700">Marca los aparatos que tienes y ajusta las horas/día</p>
-          <div id="kwh-live-badge"
-               class="bg-electric-600 text-white text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap shadow-sm">
-            0 kWh/mes
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="aparatos-grid">
-          {% for ap_id, ap in aparatos.items() %}
-          <div class="aparato-item" data-potencia-w="{{ ap.potencia_w }}">
-            <div class="aparato-card border-2 rounded-xl p-3 cursor-pointer transition-all select-none
-                        {% if ap.precargado %}border-electric-500 bg-electric-50{% else %}border-gray-200 hover:border-gray-300{% endif %}">
-              <!-- Row: checkbox + icono + nombre -->
-              <label class="flex items-start gap-2 cursor-pointer mb-2.5">
-                <input type="checkbox" name="aparato_{{ ap_id }}"
-                       class="aparato-check mt-0.5 w-4 h-4 rounded text-electric-600 cursor-pointer flex-shrink-0"
-                       {% if ap.precargado %}checked{% endif %} />
-                <span class="text-lg leading-none flex-shrink-0">{{ ap.icono }}</span>
-                <span class="text-xs font-semibold text-gray-700 leading-tight">{{ ap.nombre }}</span>
-              </label>
-              <!-- Horas -->
-              <div class="flex items-center gap-1.5 ml-6">
-                <span class="text-xs text-gray-400">h/día:</span>
-                <input type="number" name="horas_{{ ap_id }}"
-                       value="{{ ap.horas_dia_default }}" min="0" max="24" step="0.5"
-                       class="horas-input w-14 text-center text-xs font-semibold border border-gray-200 rounded-lg px-1.5 py-1 focus:outline-none focus:ring-1 focus:ring-electric-400 bg-white"
-                       onclick="event.stopPropagation()" />
-              </div>
-              <!-- kWh parcial (calculado en JS) -->
-              <div class="aparato-kwh mt-1.5 ml-6 text-xs font-semibold text-electric-600 min-h-[1rem]"></div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-
-        <p class="mt-3 text-xs text-gray-400">
-          * Los valores de horas son referencias por día; ajústalos según tu uso real.
-        </p>
-      </div>
-
-      <!-- ── Comuna + Tarifa ── -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-
-        <!-- Buscador de comuna -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2" for="comuna-input">
-            Tu comuna
-          </label>
-          <div class="relative">
-            <input type="text" id="comuna-input" name="comuna"
-                   list="comunas-list" autocomplete="off"
-                   placeholder="Ej: Santiago, Temuco, Viña del Mar…"
-                   class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-electric-500 bg-white text-sm font-medium pr-20">
-            <span id="comuna-ok" class="hidden absolute right-12 top-3.5 text-green-500 text-lg">✓</span>
-            <!-- Botón GPS -->
-            <button type="button" id="btn-gps"
-                    onclick="detectarUbicacion()"
-                    title="Detectar mi ubicación"
-                    class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-gray-400 hover:text-electric-600 hover:bg-electric-50 transition-colors"
-                    aria-label="Usar mi ubicación GPS">
-              <svg id="gps-icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 2a7 7 0 017 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 017-7z"/>
-                <circle cx="12" cy="9" r="2.5" fill="currentColor" stroke="none"/>
-              </svg>
-              <svg id="gps-spinner" class="hidden w-5 h-5 animate-spin text-electric-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-              </svg>
-            </button>
-          </div>
-          <datalist id="comunas-list">
-            {% for c in comunas %}
-            <option value="{{ c.nombre }}">{{ c.region }}</option>
-            {% endfor %}
-          </datalist>
-          <!-- Distribuidora resuelta (visible cuando se elige una comuna) -->
-          <p id="dist-resuelta" class="hidden mt-1.5 text-xs text-electric-600 font-semibold"></p>
-          <!-- Mensaje de error GPS -->
-          <p id="gps-error" class="hidden mt-1.5 text-xs text-red-500"></p>
-          <!-- Fallback: selector manual si la comuna no se reconoce -->
-          <div id="dist-fallback" class="mt-2">
-            <label class="block text-xs text-gray-500 mb-1">
-              ¿No encuentras tu comuna? Selecciona la distribuidora:
-            </label>
-            <select name="distribuidora" id="distribuidora-select"
-                    class="w-full border border-gray-200 rounded-lg px-3 py-2 bg-white text-xs text-gray-600">
-              {% for dist_id, dist in tarifas.items() %}
-              <option value="{{ dist_id }}">{{ dist.nombre }} – {{ dist.region }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-
-        <!-- Tarifa -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2" for="tarifa-select">
-            Tipo de tarifa
-          </label>
-          <select name="tarifa" id="tarifa-select"
-                  class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-electric-500 bg-white text-sm font-medium">
-            <option value="BT1">BT1 – Residencial Normal</option>
-            <option value="BT2">BT2 – Con Medidor Horario</option>
-          </select>
-          <!-- Vigencia de tarifas -->
-          <p class="mt-1.5 text-xs text-gray-400" id="tarifa-vigencia"></p>
-        </div>
-      </div>
-
-      <!-- Info BT2 -->
-      <div id="bt2-info"
-           class="hidden mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
-        <p class="font-semibold mb-1">ℹ️ ¿Qué es la tarifa BT2?</p>
-        <p>Cobra por tu <strong>demanda máxima en hora punta</strong> (kW), no por cuánta energía consumes en ese horario.</p>
-        <ul class="mt-2 space-y-1 ml-4 list-disc">
-          <li><strong>Hora punta: 18:00–23:00 h días hábiles.</strong></li>
-          <li>Si en ese período tus aparatos encendidos suman poco (ej. TV + ampolletas ≈ 0,3 kW), puede convenirte.</li>
-          <li>Si enciendes calefactor, microondas o plancha en hora punta, la boleta sube mucho.</li>
-        </ul>
-        <p class="mt-2 text-xs">* Requiere medidor inteligente. Consulta a tu distribuidora antes de cambiar.</p>
-      </div>
-
-      <!-- ── Botón ── -->
-      <button type="submit"
-              class="mt-6 w-full bg-electric-600 hover:bg-electric-700 active:bg-electric-800 text-white font-bold py-4 px-6 rounded-xl transition-colors text-base shadow-md hover:shadow-lg">
-        ⚡ Calcular mi boleta
-      </button>
-    </form>
-  </div>
-
-  <!-- Feature pills -->
-  <div class="grid grid-cols-3 gap-3 mt-5 text-center">
-    <div class="bg-white rounded-xl p-3.5 shadow-sm border border-gray-100">
-      <div class="text-2xl mb-1">🔍</div>
-      <div class="text-xs font-semibold text-gray-600">Desglose real</div>
-    </div>
-    <div class="bg-white rounded-xl p-3.5 shadow-sm border border-gray-100">
-      <div class="text-2xl mb-1">💰</div>
-      <div class="text-xs font-semibold text-gray-600">Tips de ahorro</div>
-    </div>
-    <div class="bg-white rounded-xl p-3.5 shadow-sm border border-gray-100">
-      <div class="text-2xl mb-1">☀️</div>
-      <div class="text-xs font-semibold text-gray-600">¿Te conviene solar?</div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== HISTORIAL RECIENTE (LocalStorage) ===== -->
-<div id="historial-section" class="max-w-2xl mx-auto mt-6 hidden">
-  <h3 class="text-sm font-semibold text-gray-500 mb-3">Tus cálculos recientes</h3>
-  <div id="historial-items" class="flex flex-wrap gap-2"></div>
-</div>
-
-<!-- ADSENSE PLACEHOLDER: Banner lateral / In-content -->
-<!-- ══════════════════════════════════════════════════ -->
-<!-- INSERTAR AQUÍ: código de Google AdSense (mid-page) -->
-<div id="adsense-mid" class="max-w-2xl mx-auto mt-8 min-h-[100px] bg-gray-100 rounded-xl flex items-center justify-center text-gray-300 text-xs border border-dashed border-gray-200">
-  <!-- Google AdSense: unidad in-content -->
-</div>
-<!-- ══════════════════════════════════════════════════ -->
-
-{% endblock %}
-
-{% block scripts %}
-<script>
-  window.TARIFAS_DATA = {{ tarifas | tojson }};
-  window.COMUNAS_DATA = {{ comunas | tojson }};
-</script>
-<script>
-  const DIST_NOMBRES = {
-    enel:       "Enel (RM y alrededores)",
-    cge:        "CGE (centro-sur y norte)",
-    chilquinta: "Chilquinta (V Región)",
-    frontel:    "Frontel (IX Región)",
-  };
-
-  function detectarUbicacion() {
-    if (!navigator.geolocation) {
-      mostrarGpsError("Tu navegador no soporta geolocalización.");
-      return;
-    }
-    setGpsLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        try {
-          const { latitude: lat, longitude: lon } = pos.coords;
-          const resp = await fetch(`/api/gis/distribuidora?lat=${lat}&lon=${lon}`);
-          const data = await resp.json();
-          if (!resp.ok) {
-            mostrarGpsError(data.detail || "No se pudo identificar la distribuidora.");
-          } else {
-            // Rellenar campo de comuna
-            const input = document.getElementById("comuna-input");
-            input.value = data.comuna;
-            input.dispatchEvent(new Event("input"));
-
-            // Seleccionar distribuidora en el fallback (por si acaso)
-            const sel = document.getElementById("distribuidora-select");
-            if (sel) sel.value = data.distribuidora_id;
-
-            // Mostrar mensaje de confirmación
-            const msgEl = document.getElementById("dist-resuelta");
-            msgEl.textContent = `📍 ${data.comuna} → ${DIST_NOMBRES[data.distribuidora_id] || data.distribuidora_id}`;
-            msgEl.classList.remove("hidden");
-
-            document.getElementById("gps-error").classList.add("hidden");
-            document.getElementById("comuna-ok").classList.remove("hidden");
-          }
-        } catch (e) {
-          mostrarGpsError("Error de conexión al detectar ubicación.");
-        } finally {
-          setGpsLoading(false);
-        }
-      },
-      (err) => {
-        setGpsLoading(false);
-        const msgs = {
-          1: "Permiso de ubicación denegado.",
-          2: "Ubicación no disponible.",
-          3: "Tiempo de espera agotado.",
-        };
-        mostrarGpsError(msgs[err.code] || "Error de geolocalización.");
-      },
-      { timeout: 10000, maximumAge: 300000 }
-    );
-  }
-
-  function setGpsLoading(loading) {
-    document.getElementById("gps-icon").classList.toggle("hidden", loading);
-    document.getElementById("gps-spinner").classList.toggle("hidden", !loading);
-    document.getElementById("btn-gps").disabled = loading;
-  }
-
-  function mostrarGpsError(msg) {
-    const el = document.getElementById("gps-error");
-    el.textContent = msg;
-    el.classList.remove("hidden");
-  }
-
-  // ── Historial LocalStorage ──
-  (function () {
-    try {
-      const historial = JSON.parse(localStorage.getItem('cuentaluz_historial') || '[]');
-      if (!historial.length) return;
-
-      const fmt = n => '$' + Math.round(n).toLocaleString('es-CL');
-      const section  = document.getElementById('historial-section');
-      const container = document.getElementById('historial-items');
-
-      historial.forEach(h => {
-        const pill = document.createElement('button');
-        pill.type = 'button';
-        pill.className = 'inline-flex flex-col items-start bg-white border border-gray-200 hover:border-electric-400 rounded-xl px-3 py-2.5 text-left transition-colors shadow-sm';
-        pill.innerHTML = `
-          <span class="text-xs text-gray-400">${h.fecha} · ${h.tarifa}</span>
-          <span class="font-bold text-gray-900 text-sm">${h.kwh} kWh – ${h.distribuidora}</span>
-          <span class="text-electric-600 text-xs font-semibold">${fmt(h.total)}</span>
-        `;
-        pill.addEventListener('click', () => {
-          const kwhInput = document.getElementById('kwh-directo-input');
-          if (kwhInput) { kwhInput.value = h.kwh; }
-          const selDist = document.getElementById('distribuidora-select');
-          if (selDist) { selDist.value = h.dist_id; }
-          document.getElementById('kwh-directo-input')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        });
-        container.appendChild(pill);
-      });
-
-      section.classList.remove('hidden');
-    } catch (e) {}
-  })();
-</script>
+{% include "_journey.html" %}
+<section class="calculator-layout" aria-labelledby="titulo-calculadora">
+  <form id="calculator-form" class="card calculator-card" method="post" action="/calcular">
+    <div class="section-heading"><div><p class="eyebrow">EMPIEZA AQUÍ</p><h2 id="titulo-calculadora">Hagamos los números</h2></div><span class="small-tag">ESCENARIO RESIDENCIAL</span></div>
+    <p class="hint">¿Quieres comprobar los importes de una factura? <a href="/revisar">Revisar netos, IVA y exentos →</a>. <a href="/fuentes">Ver respaldos nacionales</a>.</p>
+    {% if error %}<div class="notice danger" role="alert" tabindex="-1" id="form-error">{{ error }}</div>{% endif %}
+    <input type="hidden" name="modo" id="modo" value="{{ valores.get('modo', 'kwh') }}">
+    <div class="mode-switch" role="group" aria-label="Cómo ingresar el consumo"><button type="button" data-mode="kwh" aria-pressed="true">Tengo mis kWh</button><button type="button" data-mode="aparatos" aria-pressed="false">Estimar por aparatos</button></div>
+    <fieldset><legend><span class="step">01</span> Tu suministro</legend>
+      <div class="field-grid"><div class="field"><label for="distribuidora">Distribuidora</label><select id="distribuidora" name="distribuidora">{% for id, dist in tarifas.items() %}<option value="{{ id }}" {% if valores.get('distribuidora','enel') == id %}selected{% endif %}>{{ dist.nombre }}</option>{% endfor %}</select><span class="hint">Confírmala en tu boleta. <a href="/comunas">Ver cobertura orientativa ↗</a></span></div><div class="field"><label for="dias">Días del período</label><input id="dias" name="dias" type="number" min="1" max="62" value="{{ valores.get('dias', 30) }}" required><span class="hint">Se usan para el promedio diario y los aparatos.</span></div></div>
+    </fieldset>
+    <fieldset><legend><span class="step">02</span> Tu consumo</legend>
+      <div id="panel-kwh"><label for="kwh_directo">Energía consumida en el período</label><div class="big-input"><input type="number" id="kwh_directo" name="kwh_directo" min="0.01" max="10000" step="0.01" value="{{ valores.get('kwh_directo', 250) }}" required><span>kWh</span></div><div class="quick-picks" role="group" aria-label="Ejemplos de consumo"><span>Prueba con</span>{% for n in [150,250,400,600] %}<button type="button" data-kwh="{{ n }}">{{ n }} kWh</button>{% endfor %}</div><p class="hint">Busca «consumo del mes» o «energía consumida» en tu boleta.</p></div>
+      <div id="panel-aparatos" hidden><p class="hint">Potencia de referencia × horas diarias × días del período. El funcionamiento real puede ser intermitente.</p><div class="appliance-list">{% for id, ap in aparatos.items() %}<div class="appliance-row"><label for="aparato_{{ id }}"><input type="checkbox" id="aparato_{{ id }}" name="aparato_{{ id }}" {% if valores.get('aparato_' ~ id) %}checked{% endif %} data-watts="{{ ap.potencia_w }}"> <span>{{ ap.nombre }}<small>{{ ap.potencia_w }} W de referencia</small></span></label><div><input aria-label="Horas diarias de {{ ap.nombre }}" type="number" min="0" max="24" step="0.1" name="horas_{{ id }}" value="{{ valores.get('horas_' ~ id, ap.horas_dia_default) }}"><span>h/día</span></div></div>{% endfor %}</div><p class="appliance-total" aria-live="polite">Consumo estimado: <strong id="appliance-kwh">0 kWh</strong></p></div>
+    </fieldset>
+    <fieldset><legend><span class="step">03</span> La base de tu estimación</legend>
+      <label for="fuente">¿Qué precios quieres usar?</label><select id="fuente" name="fuente"><option value="referencia" {% if valores.get('fuente') != 'personalizada' %}selected{% endif %}>Referencia del catálogo histórico</option><option value="personalizada" {% if valores.get('fuente') == 'personalizada' %}selected{% endif %}>Ingresar mis propios precios</option></select>
+      <div class="notice" id="reference-notice"><span aria-hidden="true">ⓘ</span><p><strong>Las tarifas están en revisión.</strong> El catálogo guardado corresponde a 2026 y no tiene vigencia actual confirmada. Úsalo para explorar; para un escenario con tus valores, ingresa tus precios.</p></div>
+      <div id="custom-prices" hidden><div class="field-grid"><div class="field"><label for="precio_kwh">Precio variable final ($/kWh)</label><input id="precio_kwh" name="precio_kwh" type="number" min="0.01" max="5000" step="0.01" value="{{ valores.get('precio_kwh','') }}" placeholder="Ej.: 240"></div><div class="field"><label for="cargo_fijo">Cargo fijo final ($)</label><input id="cargo_fijo" name="cargo_fijo" type="number" min="0" max="100000" step="0.01" value="{{ valores.get('cargo_fijo','') }}" placeholder="Ej.: 750"></div></div><p class="hint">Incluye impuestos en ambos precios. El precio variable debe reunir los cargos por kWh de tu escenario. No ingreses solo el cargo por energía si buscas aproximar la cuenta completa.</p></div>
+      <details class="optional"><summary>Comparar con mi boleta <span>opcional +</span></summary><div class="field"><label for="boleta_actual">Total pagado en el mismo período ($)</label><input id="boleta_actual" name="boleta_actual" type="number" min="1" max="10000000" value="{{ valores.get('boleta_actual','') }}" placeholder="Ej.: 65000"><span class="hint">La diferencia puede incluir deudas, reliquidaciones, arriendos u otros cargos.</span></div></details>
+    </fieldset>
+    <button class="button primary full" type="submit">Entender mi cuenta <span aria-hidden="true">↗</span></button>
+    <p class="form-note">Sin crear una cuenta. Tus datos de cálculo no se guardan en una base de datos.</p>
+  </form>
+  <aside class="calculator-aside">
+    <div class="aside-intro"><p class="eyebrow">DE LA DUDA A LA DECISIÓN</p><h2>Más que<br>un total.</h2><p>Una mirada simple a lo que consumes y a lo que puedes cambiar.</p></div>
+    <ol class="benefit-list"><li><span>01</span><div><h3>Entiende cada cargo</h3><p>Un desglose legible, con la base de cálculo a la vista.</p></div></li><li><span>02</span><div><h3>Explora tu ahorro</h3><p>Compara qué pasa al reducir tu consumo un 10, 20 o 30 %.</p></div></li><li><span>03</span><div><h3>Llévate tus resultados</h3><p>Descarga el detalle o guarda un PDF desde tu navegador.</p></div></li></ol>
+    <div class="tip-card"><span class="tip-icon" aria-hidden="true">✳</span><h3>El dato que importa</h3><p>Compara los <strong>kWh por día</strong> cuando tus boletas tienen períodos de distinta duración.</p><a href="/metodologia">Conoce los alcances ↗</a></div>
+  </aside>
+</section>
+<section class="faq-section"><div><p class="eyebrow">ANTES DE EMPEZAR</p><h2>Buenas preguntas.<br>Respuestas claras.</h2></div><div class="faq-list"><details><summary>¿Por qué mi boleta puede dar un valor distinto?</summary><p>Esta estimación no incorpora deudas, subsidios, arriendo de medidor, reliquidaciones ni condiciones específicas de tu suministro. El catálogo histórico necesita una revisión de tarifas por comuna.</p></details><details><summary>¿Puedo cambiar de distribuidora?</summary><p>La distribuidora depende de la concesión que atiende tu domicilio. Una comparación de precios entre empresas no significa que puedas escoger libremente otra.</p></details><details><summary>¿Qué tarifa puedo calcular?</summary><p>El modelo público está limitado a BT1 residencial. BT2, otras opciones tarifarias y la evaluación solar requieren modelos y antecedentes adicionales.</p></details></div></section>
 {% endblock %}

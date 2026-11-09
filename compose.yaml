@@ -1,0 +1,17 @@
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      APP_ENV: production
+      PORT: 8000
+    ports:
+      - "127.0.0.1:8018:8000"
+    volumes:
+      - cuentaluz-data:/app/data
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+volumes:
+  cuentaluz-data:

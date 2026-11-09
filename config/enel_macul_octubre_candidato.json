@@ -1,0 +1,23 @@
+{
+  "id": "enel_macul_bt1a_bt_aa_t1_octubre_2026_candidato",
+  "empresa": "ENEL",
+  "cut": "13118",
+  "sector": "Macul, columna del pliego; área exacta por confirmar",
+  "red": "BT_AA",
+  "opcion": "BT1a",
+  "condicion": "ETR T1 confirmado por promedio del año anterior; consumo facturado hasta 350 kWh sin FET; sin otros cargos",
+  "desde": "2026-10-01",
+  "hasta": "2026-10-31",
+  "fuente": "https://www.enel.cl/content/dam/enel-cl/es/personas/informacion-de-utilidad/tarifas-y-reglamentos/tarifas/tarifas-reguladas/2026/Enel%20Distribuci%C3%B3n%20Chile%20SA._Tarifas%20Suministro%20El%C3%A9ctrico%208T_%20VAD%205T%20Octubre%20de%202026.pdf",
+  "sha256": null,
+  "estado": "pendiente",
+  "revision_reglas": null,
+  "casos_contrastados": [],
+  "limites_cantidades": {"mes_facturado":{"minimo":"1", "maximo":"1"}, "energia_kwh":{"minimo":"0", "maximo":"350"}},
+  "cargos": [
+    {"nombre":"Administración del servicio", "cantidad":"mes_facturado", "unidad":"$/mes", "precio_neto":"614.924", "tratamiento":"afecto", "pagina_o_celda":"Página 1, Macul, cargo fijo mensual"},
+    {"nombre":"Electricidad consumida: energía + compras de potencia + distribución", "cantidad":"energia_kwh", "unidad":"$/kWh", "precio_neto":"181.376", "tratamiento":"afecto", "pagina_o_celda":"Página 1, Macul, BT_AA T1; 136.169 + 25.078 + 20.129"},
+    {"nombre":"Transporte", "cantidad":"energia_kwh", "unidad":"$/kWh", "precio_neto":"17.218", "tratamiento":"afecto", "pagina_o_celda":"Página 1, Macul, transporte; 9.953 + 7.242 + 0.023"},
+    {"nombre":"Servicio público sin FET", "cantidad":"energia_kwh", "unidad":"$/kWh", "precio_neto":"0.855", "tratamiento":"exento", "pagina_o_celda":"Página 1, servicio público y notas FET"}
+  ]
+}

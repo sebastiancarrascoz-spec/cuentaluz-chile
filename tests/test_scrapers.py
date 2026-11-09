@@ -235,24 +235,18 @@ class TestMetadata:
         assert "alerta_desactualizado" in meta
         assert "proxima_actualizacion" in meta
 
-    def test_alerta_false_si_reciente(self):
+    def test_alerta_false_si_reciente(self, monkeypatch):
         """Con fecha de hoy, alerta debe ser False."""
         from services.tarifa_service import get_metadata
         import json
         from pathlib import Path
         # Simular tarifas con fecha de hoy
         from datetime import date
-        tarifas_path = _ROOT / "config" / "tarifas.json"
-        data = json.loads(tarifas_path.read_text(encoding="utf-8"))
-        original = data["metadata"]["ultima_actualizacion"]
+        data = {"metadata": {}}
         data["metadata"]["ultima_actualizacion"] = date.today().isoformat()
-        tarifas_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-        try:
-            meta = get_metadata()
-            assert meta["alerta_desactualizado"] is False
-        finally:
-            data["metadata"]["ultima_actualizacion"] = original
-            tarifas_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        monkeypatch.setattr("services.tarifa_service._cargar_tarifas", lambda: data)
+        meta = get_metadata()
+        assert meta["alerta_desactualizado"] is False
 
 
 # ── Parsing PDF de Enel (integration test) ────────────────────────────────────

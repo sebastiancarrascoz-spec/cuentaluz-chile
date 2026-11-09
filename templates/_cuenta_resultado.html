@@ -1,0 +1,26 @@
+<section class="card account-report" id="informe-cuenta" aria-labelledby="total-cuenta">
+  <p class="eyebrow">CUENTA CONSOLIDADA · DATOS DECLARADOS</p>
+  <h2 id="total-cuenta">Total del escenario: {{ consolidada.total | clp }}</h2>
+  <p class="hint">CuentaLuz Chile · {{ consolidada.revision_modelo }} · cálculo UTC {{ consolidada.fecha_calculo_utc }}</p>
+  <p>Este resultado reúne los cargos que declaraste. La tarifa y su aplicabilidad siguen pendientes de validación.</p>
+  {% if cuenta_entrada %}<p>Lecturas: {{ cuenta_entrada.periodo.lectura_anterior }} → {{ cuenta_entrada.periodo.lectura_actual }}. Consumo: {{ cuenta_entrada.periodo.kwh }} kWh. Reparto: {{ 'por días' if cuenta_entrada.periodo.asignacion == 'dias' else 'por lecturas' }}. Fijo: {{ 'ponderado por días (supuesto)' if cuenta_entrada.periodo.modo_fijo == 'ponderado' else 'importe total declarado' }}. Redondeo: {{ cuenta_entrada.periodo.redondeo | replace('_',' ') }}.</p>{% endif %}
+  <div class="pdf-table" role="region" tabindex="0" aria-label="Desglose de la cuenta"><table class="breakdown-table">
+    <caption>Importes antes del IVA, redondeados al peso</caption>
+    <thead><tr><th scope="col">Cargo</th><th scope="col">Tratamiento</th><th scope="col">Importe</th></tr></thead>
+    <tbody>{% for c in consolidada.componentes %}<tr><th scope="row">{{ c.nombre }}</th><td>{{ {'afecto':'Afecto a IVA','exento':'Exento','final':'Después del IVA'}[c.tratamiento] }}</td><td>{{ c.neto | clp }}</td></tr>{% endfor %}
+    <tr><th scope="row" colspan="2">Ajuste de redondeo afecto</th><td>{{ consolidada.ajuste_redondeo_afecto | clp }}</td></tr>
+    <tr><th scope="row" colspan="2">Ajuste de redondeo exento</th><td>{{ consolidada.ajuste_redondeo_exento | clp }}</td></tr>
+    <tr><th scope="row" colspan="2">Neto afecto</th><td>{{ consolidada.neto_afecto | clp }}</td></tr>
+    <tr><th scope="row" colspan="2">IVA 19 %</th><td>{{ consolidada.iva | clp }}</td></tr>
+    <tr><th scope="row" colspan="2">Total con exentos y ajustes finales</th><td>{{ consolidada.total | clp }}</td></tr></tbody>
+  </table></div>
+  {% if consolidada.total_documento is not none %}<p>Total del documento: <strong>{{ consolidada.total_documento | clp }}</strong>. Diferencia documento menos escenario: <strong>{{ consolidada.diferencia | clp }}</strong>.</p>{% endif %}
+  <details><summary>Respaldo y alcance de los cargos</summary>
+    {% for c in consolidada.componentes %}<p><strong>{{ c.nombre }}:</strong> {{ c.respaldo }}. Antes de redondear: {{ c.sin_redondear | replace('.', ',') }}.</p>{% endfor %}
+    {% for key, d in consolidada.declaraciones.items() %}<p>{{ key | replace('_',' ') | capitalize }}: {{ {'no_aplica':'no aplica (declarado)', 'declarado':'importe declarado', 'calculada':'calculada desde históricos declarados'}[d.estado] }}. {{ d.respaldo }}</p>{% endfor %}
+    <p>{{ consolidada.alcance }}</p>
+  </details>
+  {% if cuenta_entrada %}<details><summary>Precios y consumos utilizados</summary><div class="pdf-table" tabindex="0" role="region" aria-label="Precios del escenario"><table class="breakdown-table"><caption>Precios netos declarados; exentos sin IVA</caption><thead><tr><th scope="col">Vigencia</th><th scope="col">Electricidad<br>$/kWh</th><th scope="col">Transporte<br>$/kWh</th><th scope="col">Exento<br>$/kWh</th><th scope="col">Fijo neto<br>$/período</th></tr></thead><tbody>{% for p in cuenta_entrada.periodo.precios %}<tr><th scope="row">{{ p.desde }}<br>{{ p.hasta }}</th><td>{{ p.electricidad_neta | replace('.',',') }}</td><td>{{ p.transporte_neto | replace('.',',') }}</td><td>{{ p.servicio_exento | replace('.',',') }}</td><td>{{ p.fijo_neto | replace('.',',') if p.fijo_neto is not none else 'No ponderado' }}</td></tr>{% endfor %}</tbody></table></div>{% if cuenta_entrada.periodo.fijo_neto_periodo is not none %}<p>Fijo neto declarado una sola vez para el período: {{ cuenta_entrada.periodo.fijo_neto_periodo }} pesos.</p>{% endif %}<ul>{% for i in consolidada.intervalos %}<li>{{ i.desde }} a {{ i.hasta }}: {{ i.dias }} días; {{ i.kwh | replace('.',',') }} kWh. Fracción exacta: {{ i.kwh_fraccion }}.</li>{% endfor %}</ul></details>{% endif %}
+  {% if consolidada.revision %}{% include "_cuenta_diferencias.html" %}{% endif %}
+  <div class="report-actions"><button type="button" class="button secondary" id="imprimir-cuenta">Descargar informe PDF / imprimir</button><p class="hint">Se abrirá la impresión del navegador: elige «Guardar como PDF». Incluye datos, desglose, respaldos y pendientes.</p></div>
+</section>

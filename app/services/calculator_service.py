@@ -1,5 +1,7 @@
 """
-Lógica de negocio de la calculadora — modelo de componentes real.
+Motor heredado, pendiente de validación técnica y documental.
+Las funciones BT2 y solar se conservan para revisión; no están expuestas en la web.
+Los comentarios originales siguientes no acreditan exactitud normativa.
 
 Estructura real de la boleta residencial chilena (BT1, Decreto CNE):
 
@@ -116,7 +118,16 @@ def calcular_boleta(
     Para BT2 (por demanda):  demanda_punta_kw = potencia máxima en hora punta (kW).
         Valor por defecto 1.5 kW = estimación conservadora hogar pequeño.
     """
+    import math
+    if not math.isfinite(kwh) or not 0 <= kwh <= 10000:
+        raise ValueError("El consumo debe ser finito y estar entre 0 y 10.000 kWh.")
+    if not math.isfinite(demanda_punta_kw) or demanda_punta_kw < 0:
+        raise ValueError("La potencia debe ser finita y no negativa.")
     tarifas_all  = cargar_tarifas()
+    if distribuidora not in tarifas_all or "tarifas" not in tarifas_all[distribuidora]:
+        raise ValueError("Distribuidora no disponible.")
+    if tarifa_tipo not in tarifas_all[distribuidora]["tarifas"]:
+        raise ValueError("Tarifa no disponible.")
     dist_data    = tarifas_all[distribuidora]
     tarifa       = dist_data["tarifas"][tarifa_tipo]
     verificado   = dist_data.get("datos_verificados", False)

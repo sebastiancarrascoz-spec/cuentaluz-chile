@@ -1,0 +1,10 @@
+[
+  {"id":"sec_empresas_conexion","url":"https://www.sec.cl/gda/tramitacion-de-conexion-en-linea/","clase":"indice","proveedor":"sec"},
+  {"id":"sec_directorio_distribuidoras","url":"https://www.sec.cl/contactar-distribuidora/","clase":"indice","proveedor":"sec"},
+  {"id":"cne_pnp_2026","url":"https://www.cne.cl/tarificacion/electrica/precio-nudo-promedio/fijaciones-2026/","clase":"indice","proveedor":"cne"},
+  {"id":"subdere_comunas","url":"https://www.subdere.gov.cl/sites/default/files/documentos/CUT_2018_v04.xls","clase":"territorio","proveedor":"subdere"},
+  {"id":"bcn_comunas","url":"https://www.bcn.cl/siit/mapoteca/comunas","clase":"indice","proveedor":"bcn"},
+  {"id":"enel_tarifas","url":"https://www.enel.cl/es/clientes/tarifas-y-regulacion/tarifas.html","clase":"indice","proveedor":"enel"},
+  {"id":"frontel_tarifas","url":"https://web.gruposaesa.cl/es/web/frontel/pago-y-boleta/tarifas-vigentes","clase":"indice","proveedor":"frontel"},
+  {"id":"cge_tarifas","url":"https://www.cge.cl/informacion-clientes/tarifas/","clase":"indice","proveedor":"cge"}
+]

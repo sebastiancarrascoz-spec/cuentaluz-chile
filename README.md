@@ -1,101 +1,89 @@
-# ⚡ CuentaLuz Chile
+# CuentaLuz Chile · Versión 2
 
-Calculadora de boleta eléctrica residencial para Chile. Permite estimar el desglose real de la cuenta de luz según distribuidora (Enel, CGE, Chilquinta, Frontel) y tarifa (BT1 / BT2).
+Aplicación web residencial para entender el consumo, explorar un desglose y simular ahorro. FastAPI + Jinja2, CSS y JavaScript propios, sin recursos externos ni registro obligatorio.
 
-## Funcionalidades
+**[Abrir versión de pruebas en Vercel](https://cuentaluz-chile-preview-eep78iloq-sebastiancarrascoz-spec.vercel.app)**. Conserva Vercel Authentication y puede pedir iniciar sesión con la cuenta propietaria. Usa precios declarados; las tarifas oficiales siguen pendientes. Configuración y pruebas en [VERCEL.md](VERCEL.md).
 
-- **Calculadora principal**: ingreso directo de kWh o estimación por aparatos
-- **Desglose de boleta**: cargo fijo, energía, distribución e IVA
-- **Gráfico interactivo**: torta del desglose con Chart.js
-- **Escenarios de ahorro**: impacto de reducir 10 %, 20 % y 30 % el consumo
-- **Análisis solar**: retorno de inversión simplificado para paneles fotovoltaicos
-- **Comparador BT1 vs BT2**: para decidir si conviene cambiar de tarifa
-- **Recomendaciones personalizadas**: 3 acciones concretas según el perfil de consumo
-- **Newsletter**: captura de emails en SQLite
+Actualización nacional: [362 documentos públicos respaldados y cobertura de 346 comunas](RESPALDOS_NACIONALES.md), con alcance comercial e industrial en investigación. `/fuentes` muestra los originales y sus hashes; `/revisar` concilia netos, IVA y exentos. El motor por componentes exige contexto y cantidades facturables, pero los modelos nacionales siguen pendientes de aprobación. El catálogo histórico no debe interpretarse como precio vigente.
 
-## Stack
+## Ver la aplicación local
 
-| Capa | Tecnología |
-|------|-----------|
-| Backend | FastAPI + Jinja2 |
-| Frontend | HTML + Tailwind CDN + Chart.js CDN |
-| Base de datos | SQLite (SQLAlchemy) |
-| Deploy | Railway / Render |
+En `/demanda-3` puedes revisar el cargo de demanda neto de BT3 y AT3 con tu precio, clasificación e históricos. Se comparan la memoria en kW y el mínimo monetario; una ventana no confirmada que cambia el resultado impide emitir un cargo único. No es una tarifa aprobada ni el total de la cuenta. Alcance y verificación en [DEMANDA_BT3_AT3.md](DEMANDA_BT3_AT3.md).
 
-## Estructura del proyecto
+En `/periodos` puedes explorar un cambio de precios entre lecturas y comparar el efecto del reparto temporal y el redondeo. Es un escenario con precios declarados; no selecciona automáticamente una tarifa oficial. El diagnóstico y las condiciones todavía pendientes están en [PRECISION_TEMPORAL.md](PRECISION_TEMPORAL.md).
 
-```
-cuenta-luz-chile/
-├── main.py                        # App FastAPI, filtros Jinja2, entry point
-├── database.py                    # Configuración SQLAlchemy
-├── requirements.txt
-├── Procfile                       # Para Railway/Render
-├── railway.toml                   # Config Railway
-├── .env.example
-├── config/
-│   ├── tarifas.json               # Tarifas por distribuidora ← editar aquí
-│   └── aparatos.json              # Lista de electrodomésticos
-├── app/
-│   ├── models/subscriber.py       # Modelo SQLAlchemy para newsletter
-│   ├── routes/
-│   │   ├── calculator.py          # Rutas GET / y POST /calcular
-│   │   └── newsletter.py          # Ruta POST /api/newsletter
-│   └── services/
-│       └── calculator_service.py  # Lógica de negocio (pura, sin HTTP)
-├── templates/
-│   ├── base.html                  # Layout base con header/footer
-│   ├── index.html                 # Formulario calculadora
-│   └── resultados.html            # Página de resultados
-└── static/
-    ├── css/custom.css
-    └── js/main.js                 # Tabs, contador kWh, validación
+En `/revisar` puedes seleccionar una factura PDF para proponer sus importes localmente, revisarlos y después comprobar el total. El archivo no se envía al servidor. La lectura admite formatos reconocibles con neto/IVA desglosados; no es una validación de tarifas y tiene límites visibles. Las pruebas del parser se ejecutan con `node --test tests/invoice_parser.test.mjs` y no necesitan un PDF privado.
+
+En este equipo, ejecutar `Iniciar-CuentaLuz.ps1` o abrir http://127.0.0.1:8018 si el servidor ya está activo.
+
+Instalación desde cero con Python 3.11:
+
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip setuptools
+.\.venv\Scripts\python.exe -m pip install -r requirements.lock
+.\.venv\Scripts\python.exe -m uvicorn main:app --host 127.0.0.1 --port 8018
 ```
 
-## Instalación local
+No usar el servidor de desarrollo como servicio público. Las rutas de archivos son absolutas respecto del proyecto; la base SQLite local se ubica en `data/cuentaluz.db`.
 
-```bash
-# 1. Clonar / descargar el proyecto
-cd cuenta-luz-chile
+## Qué incluye
 
-# 2. Crear y activar entorno virtual
-python -m venv venv
-source venv/bin/activate        # Linux/Mac
-venv\Scripts\activate           # Windows
+- Interfaz adaptable: inicio, calculadora por pasos, resultados, cobertura orientativa y metodología.
+- Consumo directo o estimado por aparatos y días del período.
+- Modelo BT1 del catálogo histórico, con fuente, vigencia declarada y advertencia explícita.
+- Escenario con precio variable y cargo fijo finales ingresados por el usuario.
+- Desglose reconciliado con el total, comparación con boleta, kWh/día y costo medio.
+- Escenarios de reducción del 10, 20 y 30 % y control interactivo de 0 a 50 %.
+- Descarga CSV con entradas y alcance; impresión o PDF desde el navegador.
+- Validación de entradas, límite de cuerpo, control de hosts, cabeceras de seguridad y rutas de salud.
 
-# 3. Instalar dependencias
-pip install -r requirements.txt
+## Alcance tarifario
 
-# 4. Ejecutar
-python main.py
-# o bien:
-uvicorn main:app --reload
+El catálogo recuperado es una referencia antigua, con diferencias entre empresas y condiciones pendientes de revisión. La versión 2 **no certifica sus importes como actuales**. El cálculo público no ofrece BT2 ni rentabilidad solar mientras se validan sus modelos. La selección de distribuidora es explícita: no se cambia automáticamente según un mapa de comunas.
 
-# 5. Abrir en el navegador
-# http://localhost:8000
+Con `APP_ENV=production`, los resultados del catálogo sin aprobación documental se bloquean y la página propone usar precios propios. El cálculo personalizado es un escenario lineal, no una reproducción de todos los posibles cargos de una boleta.
+
+## Estructura
+
+```text
+main.py                          # Aplicación, límites, cabeceras y salud
+app/routes/calculator.py         # Páginas y POST /api/estimar
+app/services/estimate_service.py # Contrato validado y escenarios públicos
+app/services/calculator_service.py # Motor heredado, en revisión técnica
+templates/                       # Cinco páginas Jinja2
+static/                          # CSS, JavaScript e icono locales
+config/                          # Catálogo histórico, aparatos y mapa orientativo
+tests/                           # Regresiones, entradas, cálculos y controles
+scripts/                         # Verificación de navegador y accesibilidad
+PRODUCCION.md                    # Despliegue, pendientes y mejoras propuestas
+VERIFICACION.md                  # Resultados y límites comprobados
 ```
 
-## Deploy en Railway
+## Pruebas y revisión
 
-1. Subir el proyecto a un repositorio GitHub.
-2. En Railway: **New Project → Deploy from GitHub repo**.
-3. Railway detecta automáticamente el `Procfile` o el `railway.toml`.
-4. (Opcional) Agregar variable de entorno `DATABASE_URL` con una URL PostgreSQL para producción.
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m pytest tests -q
+.\.venv\Scripts\python.exe -m pip_audit -r requirements.lock
+```
 
-## Deploy en Render
+Verificación visual (servidor local activo en 8018):
 
-1. Crear un nuevo **Web Service** apuntando al repositorio.
-2. Build command: `pip install -r requirements.txt`
-3. Start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+```powershell
+.\.venv\Scripts\python.exe -m playwright install chromium
+.\.venv\Scripts\python.exe scripts/verify_browser.py
+npm.cmd install --prefix .qa axe-core
+.\.venv\Scripts\python.exe scripts/verify_accessibility.py
+```
 
-## Actualizar tarifas
+En la revisión de esta entrega, los scripts de navegador usaron Playwright 1.57 instalado en el Python local y el servidor usó el entorno aislado `.venv` con Python 3.11. Las capturas e informes se guardan en `artifacts/`, excluida de Git.
 
-Las tarifas están en `config/tarifas.json`. Edita los valores `cargo_fijo_clp`, `cargo_energia_clp_kwh` y `cargo_distribucion_clp_kwh` según los decretos tarifarios vigentes de la CNE.
+## Producción
 
-## Monetización (preparado, no implementado)
+Ver [PRODUCCION.md](PRODUCCION.md). La CI de GitHub construyó y ejecutó el contenedor, comprobó sus controles y probó respaldo/restauración y reinicio. El despliegue público y la validación de tarifas siguen pendientes. Sebastián decidió mejorar antes de publicar. La propuesta de código está en la revisión en borrador [#1](https://github.com/sebastiancarrascoz-spec/cuentaluz-chile/pull/1).
 
-- **AdSense**: busca los comentarios `<!-- ADSENSE PLACEHOLDER -->` en `base.html` e `index.html` e inserta tu código de unidad de anuncio.
-- **Afiliados solares**: busca el comentario `<!-- AFILIADOS -->` en `resultados.html`.
+Los scrapers son herramientas de revisión: generan candidatos fuera del catálogo activo. No se programan desde el servidor web. La newsletter y el GPS heredados no están expuestos.
+# Avance hacia producción
 
-## Licencia
-
-MIT — úsalo libremente para proyectos personales o comerciales.
+Consultar [PLAN_PRODUCCION.md](PLAN_PRODUCCION.md) para el orden solicitado y el estado real. La vista `/cuenta` reúne los cargos con datos declarados e incorpora los históricos de los módulos de demanda. La normalización inicial conserva 63.120 valores candidatos de cuatro distribuidoras, con fuente y celda. Las tarifas oficiales nacionales siguen pendientes de aprobación.

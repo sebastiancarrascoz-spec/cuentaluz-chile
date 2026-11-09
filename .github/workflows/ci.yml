@@ -1,0 +1,41 @@
+name: Verificación CuentaLuz
+on:
+  push:
+    branches: [master]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: python -m pip install --upgrade pip setuptools
+      - run: pip install -r requirements.lock -r requirements-dev.txt
+      - run: pytest tests -q
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: node --test tests/invoice_parser.test.mjs tests/invoice_metadata.test.mjs tests/scenario_store.test.mjs
+      - run: pip-audit -r requirements.lock
+      - run: docker build -t cuentaluz:test .
+      - name: Arrancar contenedor candidato
+        run: docker run -d --name cuentaluz-smoke -p 127.0.0.1:8019:8000 -e ALLOWED_HOSTS=127.0.0.1,localhost cuentaluz:test
+      - name: Verificar proceso y controles públicos
+        run: python scripts/verify_runtime.py --base-url http://127.0.0.1:8019
+      - name: Probar respaldo y restauración con usuario del contenedor
+        run: docker exec cuentaluz-smoke python ops/backup_sqlite.py --database data/cuentaluz.db --output data/backups
+      - name: Reiniciar candidato
+        run: docker restart cuentaluz-smoke
+      - name: Verificar después del reinicio
+        run: python scripts/verify_runtime.py --base-url http://127.0.0.1:8019
+      - name: Mostrar diagnóstico técnico en caso de fallo
+        if: failure()
+        run: docker logs cuentaluz-smoke
+      - name: Cerrar contenedor de prueba
+        if: always()
+        run: docker rm -f cuentaluz-smoke
