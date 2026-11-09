@@ -1,0 +1,4 @@
+<details><summary>Comparar cada cargo con mi documento · opcional</summary>
+<p>Transcribe importes netos en pesos enteros. El cero es un dato conocido; deja vacío lo que aún no conoces. Esta comparación explica diferencias y no acredita los precios del escenario.</p>
+<div class="field-grid">{% for key, label in observed_labels.items() %}<div class="field"><label for="obs_{{ key }}">{{ label }} observado ($)</label><input id="obs_{{ key }}" name="obs_{{ key }}" type="number" min="{{ -1000000000000 if key == 'ajustes_finales' else 0 }}" max="1000000000000000" step="1" value="{{ valores.get('obs_' ~ key,'') }}"></div>{% endfor %}</div>
+<p class="hint">Si también ingresas el total en el campo general, ambos deben coincidir. Los agregados de potencia y demanda se comparan juntos, sin duplicar sus componentes.</p></details>

@@ -18,6 +18,7 @@
     <nav aria-label="Navegación principal">
       <a href="/" {% if request.url.path == '/' %}aria-current="page"{% endif %}>Calculadora</a>
       <a href="/cuenta" {% if request.url.path == "/cuenta" %}aria-current="page"{% endif %}>Armar cuenta</a>
+      <a href="/comparar" {% if request.url.path == "/comparar" %}aria-current="page"{% endif %}>Comparar</a>
       <a href="/comunas" {% if request.url.path == '/comunas' %}aria-current="page"{% endif %}>Cobertura</a>
       <a href="/revisar" {% if request.url.path == '/revisar' %}aria-current="page"{% endif %}>Revisar cuenta</a>
       <a href="/fuentes" {% if request.url.path == '/fuentes' %}aria-current="page"{% endif %}>Fuentes</a>

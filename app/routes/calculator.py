@@ -13,6 +13,7 @@ from app.services.demand_service import DemandInput, evaluar_demanda, month_inde
 from app.services.period_service import PeriodInput, evaluar_periodos
 from app.services.demand3_service import Demand3Input, evaluar_demanda3
 from app.services.account_service import AccountInput, CATEGORIES, Demand4Prices, evaluar_cuenta
+from app.services.difference_service import LABELS as OBSERVED_LABELS
 
 ROOT = Path(__file__).resolve().parents[2]
 router = APIRouter()
@@ -113,7 +114,7 @@ def api_cuenta(entrada: AccountInput):
 
 @router.get("/cuenta", response_class=HTMLResponse)
 def cuenta(request: Request):
-    return templates.TemplateResponse(request, "periodos.html", contexto(request, valores={}, cuenta=True))
+    return templates.TemplateResponse(request, "periodos.html", contexto(request, valores={}, cuenta=True, observed_labels=OBSERVED_LABELS))
 
 
 def demanda_desde_transferencia(form):
@@ -142,9 +143,9 @@ async def preparar_demanda(request: Request):
         valores = {"tipo_demanda":form["tipo_demanda"], "datos_demanda":data.model_dump_json(),
             "demanda_estado":"calculada"}
         return templates.TemplateResponse(request, "periodos.html", contexto(request, valores=valores,
-            cuenta=True, demanda_importada=result))
+            cuenta=True, demanda_importada=result, observed_labels=OBSERVED_LABELS))
     except (ValidationError, ValueError, TypeError):
-        return templates.TemplateResponse(request, "periodos.html", contexto(request, valores={}, cuenta=True,
+        return templates.TemplateResponse(request, "periodos.html", contexto(request, valores={}, cuenta=True, observed_labels=OBSERVED_LABELS,
             error="No se pudieron incorporar los registros. Vuelve a revisar la demanda antes de consolidar."), status_code=422)
 
 
@@ -164,12 +165,14 @@ async def cuenta_formulario(request: Request):
                 "importe":form.get(key + "_importe") or None,
                 "respaldo":form.get(key + "_respaldo")} for key in CATEGORIES},
             demanda4=priced4, demanda3=demand if isinstance(demand, Demand3Input) else None,
-            total_documento=int(form["total_documento"]) if form.get("total_documento") else None)
+            total_documento=int(form["total_documento"]) if form.get("total_documento") else None,
+            observado={k:int(form['obs_'+k]) for k in OBSERVED_LABELS if form.get('obs_'+k)} or None)
         resultado = evaluar_cuenta(entrada)
         return templates.TemplateResponse(request, "periodos.html", contexto(request, valores=valores, cuenta=True,
-            consolidada=resultado, demanda_importada=imported))
+            consolidada=resultado, demanda_importada=imported, observed_labels=OBSERVED_LABELS,
+            cuenta_entrada=entrada.model_dump(mode="json")))
     except (ValidationError, ValueError, TypeError, OverflowError):
-        return templates.TemplateResponse(request, "periodos.html", contexto(request, valores=valores, cuenta=True, demanda_importada=imported,
+        return templates.TemplateResponse(request, "periodos.html", contexto(request, valores=valores, cuenta=True, demanda_importada=imported, observed_labels=OBSERVED_LABELS,
             error="Completa fechas, precios netos y respaldo. Declara cada categoría como importe conocido o no aplica con su motivo. Deja vacío el importe de no aplica; los ajustes finales son pesos enteros con signo. El total no puede resultar negativo."), status_code=422)
 
 
@@ -300,7 +303,37 @@ async def demanda_formulario(request: Request):
 
 @router.get("/revisar", response_class=HTMLResponse)
 def revisar(request: Request):
-    return templates.TemplateResponse(request, "revisar.html", contexto(request, valores={}))
+    return templates.TemplateResponse(request, "revisar.html", contexto_revision(request, valores={}))
+
+
+def contexto_revision(request, **extra):
+    comunas = json.loads((ROOT / "config/cobertura_nacional.json").read_text(encoding="utf-8"))["comunas"]
+    return contexto(request, comunas_lector=[c["nombre"] for c in comunas], **extra)
+
+
+@router.post("/cuenta/desde-revision", response_class=HTMLResponse)
+async def cuenta_desde_revision(request: Request):
+    form=await request.form(max_fields=15,max_files=0)
+    valores={}
+    try:
+        for field in ("electricidad","transporte","administracion","exentos","neto_afecto","iva","total"):
+            raw=form.get(field)
+            if raw not in (None,""):
+                amount=int(raw)
+                if not 0<=amount<=1000000000000000:raise ValueError("Importe no válido.")
+                valores['obs_'+field]=str(amount)
+        if form.get('total'):valores['total_documento']=form['total']
+        for key in ('lectura_anterior','lectura_actual'):
+            if form.get(key):valores[key]=date.fromisoformat(form[key]).isoformat()
+        if form.get('kwh'):
+            from decimal import Decimal
+            kwh=Decimal(form['kwh'])
+            if not kwh.is_finite() or not 0<=kwh<=1000000000:raise ValueError('Consumo no válido.')
+            valores['kwh']=str(kwh)
+        return templates.TemplateResponse(request,'periodos.html',contexto(request,valores=valores,cuenta=True,observed_labels=OBSERVED_LABELS,
+            mensaje_revision='Importes observados incorporados. Completa y verifica los precios del escenario; los importes de la factura no se convierten en precios ni validan red o ETR.'))
+    except (ValueError,TypeError,ArithmeticError):
+        return templates.TemplateResponse(request,'periodos.html',contexto(request,valores={},cuenta=True,observed_labels=OBSERVED_LABELS,error='No se pudieron incorporar los datos. Vuelve a revisar el documento.'),status_code=422)
 
 
 @router.post("/revisar", response_class=HTMLResponse)
@@ -318,9 +351,9 @@ async def revisar_documento(request: Request):
                 ("exentos", "Cargos exentos", "exento")]]
         resultado = conciliar(InvoiceInput(lineas=lineas, total_documento=form.get("total_documento"),
             ajustes_finales=form.get("ajustes_finales") or "0"))
-        return templates.TemplateResponse(request, "revisar.html", contexto(request, valores=valores, revision=resultado))
+        return templates.TemplateResponse(request, "revisar.html", contexto_revision(request, valores=valores, revision=resultado))
     except (ValidationError, ValueError, TypeError):
-        return templates.TemplateResponse(request, "revisar.html", contexto(request, valores=valores,
+        return templates.TemplateResponse(request, "revisar.html", contexto_revision(request, valores=valores,
             error="Revisa los importes: usa valores netos positivos, total en pesos enteros y ajustes finales con su signo."), status_code=422)
 
 

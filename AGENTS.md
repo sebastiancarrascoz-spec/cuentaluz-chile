@@ -2,6 +2,14 @@
 
 Proyecto independiente de Inergy, ARBA y del trabajo con el empleador. Leer `PRODUCCION.md` y `VERIFICACION.md` antes de continuar.
 
+## Última actualización: siete mejoras del 9 de noviembre de 2026
+
+- Leer `MEJORAS_20261109.md`: diferencias por cargo, metadatos expresos del PDF local, inicio guiado, cobertura filtrable, historial opcional, informe e interfaz de comparación de alternativas declaradas.
+- 248 pruebas Python aprobadas, cinco antiguas omitidas; 18 JavaScript aprobadas. Pruebas de navegador, PDF y paquete documentadas allí. Falta registrar nuevo despliegue Preview y CI; no confundir con el anterior.
+- Biblioteca: 362 documentos y cero perfiles aprobados. `config/perfiles_aprobados.json` vacío. No inferir red, ETR ni elegibilidad. Conservar el peso pendiente de electricidad Enel.
+- Historial local opcional: diez escenarios, mismo origen, sin notas libres ni identificadores. Informe por impresión nativa. Comparaciones sin recomendaciones contractuales.
+- Próximo despliegue: Preview en el proyecto existente, protegido, sin dominios ni contratación. La autorización Production anterior resolvió el primer despliegue obligatorio.
+
 ## Actualización del 9 de noviembre de 2026: vista previa Vercel
 
 - Resultado posterior: Sebastián autorizó «Sí, desplegar el proyecto de pruebas» cuando Vercel exigió que el primer despliegue fuera Production. Se ejecutó en el proyecto separado con `--skip-domain`, `APP_PREVIEW=1` y sin contratar servicios. URL operativa protegida: https://cuentaluz-chile-preview-eep78iloq-sebastiancarrascoz-spec.vercel.app ; despliegue `dpl_Gdp7q3HmC1QFZxcv7oEKa5SnRufA`, `READY`, Python 3.12. No interpretar este Production técnico como lanzamiento tarifario aprobado.

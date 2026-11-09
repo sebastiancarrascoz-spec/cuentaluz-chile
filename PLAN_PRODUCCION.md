@@ -1,5 +1,7 @@
 # Avance ordenado hacia producción
 
+Actualización posterior del 9 de noviembre: se implementaron las siete mejoras de experiencia y revisión descritas en [MEJORAS_20261109.md](MEJORAS_20261109.md). Vista previa Vercel autorizada en proyecto separado; lanzamiento definitivo y aprobación tarifaria siguen pendientes. Esta actualización prevalece sobre las referencias anteriores a esperar hosting.
+
 Actualizado el 8 de noviembre de 2026. Proyecto independiente de Inergy y del empleador. La instrucción de Sebastián es avanzar en este orden y mantener precisión para todas las comunas y opciones residenciales, comerciales e industriales.
 
 | Orden | Resultado comprobado | Pendiente material |

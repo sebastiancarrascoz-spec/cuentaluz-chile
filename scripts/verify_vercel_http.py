@@ -16,7 +16,7 @@ ROOT=Path(__file__).resolve().parents[1]
 
 def verify(base):
     parsed=urlsplit(base)
-    if parsed.scheme!='https' or parsed.hostname!='cuentaluz-chile-preview-eep78iloq-sebastiancarrascoz-spec.vercel.app' or parsed.path not in ('','/') or parsed.query or parsed.fragment or parsed.username:
+    if parsed.scheme!='https' or not re.fullmatch(r'cuentaluz-chile-preview-[a-z0-9]+-sebastiancarrascoz-spec\.vercel\.app',parsed.hostname or '') or parsed.port is not None or parsed.path not in ('','/') or parsed.query or parsed.fragment or parsed.username:
         raise ValueError('El destino debe ser el despliegue de pruebas revisado.')
     cli=ROOT/'.qa/vercel-cli/node_modules/.bin/vercel.cmd'
     folder=ROOT/'artifacts/vercel-http';folder.mkdir(parents=True,exist_ok=True)
@@ -44,6 +44,12 @@ def verify(base):
     assert headers.get('cache-control')=='no-store'
     assert 'noindex' in headers.get('x-robots-tag','')
     assert 'worker-src' in headers.get('content-security-policy','')
+    for path in ('/comparar','/cobertura-validada','/revisar'):
+        code,_,headers=request(path)
+        assert code==200 and headers.get('cache-control')=='no-store'
+    for asset in ('account_workspace.mjs','invoice_metadata.mjs','scenario_store.mjs'):
+        code,body,_=request('/static/js/'+asset)
+        assert code==200 and hashlib.sha256(body).digest()==hashlib.sha256((ROOT/'static/js'/asset).read_bytes()).digest()
     code,body,headers=request('/static/css/custom.css')
     assert code==200 and 'text/css' in headers.get('content-type','')
     code,body,headers=request('/static/vendor/pdfjs/pdf.worker.min.mjs')
@@ -60,6 +66,15 @@ def verify(base):
     code,body,headers=request('/api/evaluar-cuenta',data)
     assert code==200 and json.loads(body)['total']==13785 and json.loads(body)['tarifa_oficial_validada'] is False
     assert headers.get('cache-control')=='no-store'
+    observed={**data,'observado':{'electricidad':10001,'total':13785}}
+    code,body,_=request('/api/evaluar-cuenta',observed)
+    assert code==200 and json.loads(body)['revision']
+    scenarios=[{'nombre':name,'opcion':'BT2','aplicabilidad_declarada':False,
+        'respaldo_aplicabilidad':'Caso ficticio, pendiente','cuenta':data} for name in ('Base','Alternativa')]
+    code,body,headers=request('/api/comparar-tarifas',{'escenarios':scenarios})
+    assert code==200 and json.loads(body)['menor_costo_declarado']==[] and headers.get('cache-control')=='no-store'
+    code,body,headers=request('/api/comparar-guardados',{'anterior':data,'actual':data})
+    assert code==200 and json.loads(body)['diferencia_total']==0 and headers.get('cache-control')=='no-store'
     code,_,_=request('/docs');assert code==404
     report={'destino':base,'resultado':'ok','comprobaciones':checks,'precios_propios':60750,
         'cuenta_consolidada':13785,'worker_pdfjs_hash':'coincide','proteccion_vercel':'conservada; pruebas con CLI autenticada',

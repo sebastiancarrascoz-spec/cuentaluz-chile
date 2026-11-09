@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
-      - run: node --test tests/invoice_parser.test.mjs
+      - run: node --test tests/invoice_parser.test.mjs tests/invoice_metadata.test.mjs tests/scenario_store.test.mjs
       - run: pip-audit -r requirements.lock
       - run: docker build -t cuentaluz:test .
       - name: Arrancar contenedor candidato

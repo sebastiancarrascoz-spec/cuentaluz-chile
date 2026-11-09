@@ -29,13 +29,18 @@ with sync_playwright() as p:
         assert page.locator("#pdf-archivo").input_value() == ""
         axe = page.evaluate("async()=>await axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa']}})")
         assert not axe["violations"], [v["id"] for v in axe["violations"]]
-        page.screenshot(path=str(OUT / f"pdf-importacion-{width}.png"), full_page=True)
         page.locator("#pdf-usar").click()
+        page.wait_for_function("() => document.getElementById('electricidad').value === '26300'")
         assert page.locator("#electricidad").input_value() == "26300"
         assert page.locator("#total_documento").input_value() == "35123"
+        assert page.locator("#dato_kwh").input_value() == "145"
         page.get_by_role("button", name="Comprobar el total").click()
         assert page.get_by_role("heading", name="Los importes coinciden").is_visible()
+        assert page.locator('#dato_kwh').input_value()=='145'
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+        # Chromium cambia el viewport para la captura completa. Capturar al
+        # terminar evita que su restauración desplace un clic en curso.
+        page.screenshot(path=str(OUT / f"pdf-importacion-{width}.png"), full_page=True)
         reports.append({"width":width, "total":35123, "pdf_transmitido":False, "terceros":False, "errores_js":errors, "infracciones_axe":[]})
         assert not errors
         page.goto(BASE + "/revisar")

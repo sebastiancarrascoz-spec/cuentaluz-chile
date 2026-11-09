@@ -1,4 +1,5 @@
-// Solo importes y páginas. El texto completo del documento nunca se devuelve.
+import {analizarMetadatos} from "./invoice_metadata.mjs";
+// Solo importes, metadatos eléctricos permitidos y páginas; nunca texto completo.
 const amount = String.raw`\$?\s*((?:\d{1,3}(?:\.\d{3})+|\d{1,12})(?:,\d{1,4})?)`;
 const labels = {
   administracion: String.raw`Administraci[oó]n\s+del\s+servicio`,
@@ -11,7 +12,7 @@ const labels = {
   total_documento: String.raw`(?:Monto\s+total|Total\s+a\s+pagar|Total\s+del\s+documento)`,
 };
 
-export function analizarPaginas(pages) {
+export function analizarPaginas(pages, comunas=[]) {
   if (!Array.isArray(pages) || !pages.length || pages.length > 12) throw new Error("paginas");
   const found = Object.fromEntries(Object.keys(labels).map((key) => [key, []]));
   let length = 0;
@@ -55,6 +56,6 @@ export function analizarPaginas(pages) {
       warnings.push("Neto, IVA y exentos no reconstruyen el total. Puede haber ajustes o saldos que revisar.");
     }
   }
-  return {campos: fields, faltantes: missing, ambiguos: ambiguous, avisos: warnings,
+  return {campos: fields, metadatos:analizarMetadatos(pages,comunas), faltantes: missing, ambiguos: ambiguous, avisos: warnings,
     listo_para_revisar: warnings.length === 0, paginas: pages.length};
 }

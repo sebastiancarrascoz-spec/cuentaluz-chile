@@ -4,12 +4,14 @@ Conserva fracciones hasta el redondeo final. Las categorías adicionales se
 declaran expresamente; una ausencia nunca se interpreta como importe cero.
 """
 from decimal import Decimal
+from datetime import datetime, timezone
 from fractions import Fraction
 from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from app.services.period_service import PeriodInput, importes_periodo, round_peso, decimal_text
 from app.services.demand_service import DemandInput, evaluar_demanda
 from app.services.demand3_service import Demand3Input, evaluar_demanda3
+from app.services.difference_service import ObservedAmounts, compare_observed
 
 CATEGORIES = ("demanda", "reactiva", "otros_afectos", "otros_exentos", "ajustes_finales")
 
@@ -43,9 +45,12 @@ class AccountInput(BaseModel):
     demanda4: Demand4Prices | None = None
     demanda3: Demand3Input | None = None
     total_documento: int | None = Field(default=None, ge=0, le=1000000000000000, strict=True)
+    observado: ObservedAmounts | None = None
 
     @model_validator(mode="after")
     def completeness(self):
+        if self.observado and self.observado.total is not None and self.total_documento is not None and self.observado.total != self.total_documento:
+            raise ValueError("Los dos totales declarados del documento deben coincidir.")
         if set(self.adicionales) != set(CATEGORIES):
             raise ValueError("Declara expresamente demanda, reactiva, otros afectos, otros exentos y ajustes finales.")
         for key, amount in self.adicionales.items():
@@ -119,7 +124,8 @@ def evaluar_cuenta(entrada: AccountInput):
     for r in rows:
         amount = r.pop("importe")
         r.update(neto=round_peso(amount), sin_redondear=decimal_text(amount), fraccion=str(amount))
-    return {"estado":"escenario_con_datos_declarados", "tarifa_oficial_validada":False,
+    result = {"estado":"escenario_con_datos_declarados", "tarifa_oficial_validada":False,
+        "revision_modelo":"cuenta-consolidada-2026-11-09", "fecha_calculo_utc":datetime.now(timezone.utc).isoformat(),
         "dias":days,"intervalos":intervals,"componentes":rows,"demanda":demand,
         "neto_afecto":net,"iva":iva,"exentos":exempt,"ajustes_finales":finals,
         "ajuste_redondeo_afecto":net-rounded_affect,
@@ -128,3 +134,6 @@ def evaluar_cuenta(entrada: AccountInput):
         "diferencia":entrada.total_documento-total if entrada.total_documento is not None else None,
         "declaraciones":{k:v.model_dump(mode="json") for k,v in entrada.adicionales.items()},
         "alcance":"Cuenta consolidada con precios, aplicabilidad e importes declarados. La electricidad debe incluir todos sus componentes netos. No selecciona pliegos oficiales, FET, ETR, reactiva ni subsidios automáticamente. Los ajustes finales se añaden después del IVA y no representan descuentos sobre la base imponible. Una coincidencia del total no valida la tarifa. El mes de demanda se vincula por convención al mes de lectura actual."}
+    if entrada.observado:
+        result["revision"] = compare_observed(result, entrada.observado)
+    return result

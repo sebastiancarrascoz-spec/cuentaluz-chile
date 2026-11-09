@@ -18,6 +18,12 @@ function display(result) {
     $("pdf-campos").append(row);
   }
   $("pdf-avisos").replaceChildren();
+  const metaNames={distribuidora:"Distribuidora",tarifa:"Opción tarifaria",comuna:"Comuna",kwh:"Consumo (kWh)",lectura_anterior:"Lectura anterior",lectura_actual:"Lectura actual",red:"Red expresamente informada",etr:"Tramo ETR informado"};
+  $("pdf-metadatos").replaceChildren();
+  for(const [key,field] of Object.entries(result.metadatos.campos)){
+    const li=document.createElement("li");li.textContent=`${metaNames[key]}: ${field.valor} · página ${field.pagina}`;$("pdf-metadatos").append(li);
+  }
+  for(const key of result.metadatos.ambiguos){const li=document.createElement("li");li.textContent=`Dato ambiguo pendiente: ${metaNames[key]||key}.`;$("pdf-metadatos").append(li);}
   for (const message of result.avisos) {
     const item = document.createElement("li");
     item.textContent = message;
@@ -75,7 +81,7 @@ $("pdf-archivo").addEventListener("change", async (event) => {
         page.cleanup();
       }
       if (length < 30) throw new Error("sin_texto");
-      return analizarPaginas(pages);
+      return analizarPaginas(pages,JSON.parse($("comunas-lector").textContent));
     };
     const deadline = new Promise((_, reject) => { timeout = setTimeout(() => {
       cancelled = true;
@@ -108,6 +114,17 @@ $("pdf-usar").addEventListener("click", () => {
   $("potencia").value = "0";
   $("otros").value = "0";
   $("ajustes_finales").value = "0";
+  for(const key of ["kwh","lectura_anterior","lectura_actual"]){const target=$("dato_"+key);if(target)target.value=proposal.metadatos.campos[key]?.valor??"";}
   $("pdf-estado").textContent = "Importes copiados al formulario. Revísalos y pulsa «Comprobar el total» cuando estén correctos.";
   $("electricidad").focus();
+});
+
+$("continuar-escenario").addEventListener("click",()=>{
+  const form=document.createElement("form");form.method="post";form.action="/cuenta/desde-revision";
+  for(const [name,id] of [["electricidad","electricidad"],["transporte","transporte"],["administracion","administracion"],["exentos","exentos"],["total","total_documento"],["kwh","dato_kwh"],["lectura_anterior","dato_lectura_anterior"],["lectura_actual","dato_lectura_actual"]]){
+    const value=$(id).value;if(!value)continue;
+    if(!name.startsWith("lectura")&&name!=="kwh"&&!/^\d+$/.test(value)){ $("pdf-estado").textContent="El contraste por cargo requiere pesos enteros. Revisa los importes sin redondearlos para forzar un resultado.";return; }
+    const input=document.createElement("input");input.type="hidden";input.name=name;input.value=value;form.append(input);
+  }
+  document.body.append(form);form.submit();
 });

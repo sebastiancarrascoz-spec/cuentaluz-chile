@@ -17,7 +17,7 @@ from sqlalchemy import text
 ROOT = Path(__file__).resolve().parent
 load_dotenv(ROOT / ".env")
 from database import Base, engine, PERSISTENCE_ENABLED
-from app.routes import calculator
+from app.routes import calculator, workspace
 import app.models.subscriber  # registra tablas existentes sin captar datos
 import app.models.sec_cache
 
@@ -68,7 +68,7 @@ class RequestControls:
                     (b"referrer-policy", b"strict-origin-when-cross-origin"),
                     (b"permissions-policy", b"geolocation=(), camera=(), microphone=()"),
                     (b"content-security-policy", policy.encode()), (b"x-request-id", request_id.encode())])
-                if scope["path"] in ("/calcular", "/api/estimar", "/revisar", "/api/conciliar", "/demanda", "/api/evaluar-demanda", "/periodos", "/api/evaluar-periodos", "/demanda-3", "/api/evaluar-demanda-3", "/cuenta", "/api/evaluar-cuenta", "/cuenta/preparar-demanda"):
+                if scope["path"] in ("/calcular", "/api/estimar", "/revisar", "/api/conciliar", "/demanda", "/api/evaluar-demanda", "/periodos", "/api/evaluar-periodos", "/demanda-3", "/api/evaluar-demanda-3", "/cuenta", "/api/evaluar-cuenta", "/cuenta/preparar-demanda", "/cuenta/desde-revision", "/comparar", "/api/comparar-tarifas", "/api/comparar-guardados"):
                     headers.append((b"cache-control", b"no-store"))
                 if PRODUCTION:
                     headers.append((b"strict-transport-security", b"max-age=31536000"))
@@ -106,6 +106,7 @@ class RequestControls:
 app.add_middleware(RequestControls)
 app.mount("/static", StaticFiles(directory=str(ROOT / "static")), name="static")
 app.include_router(calculator.router)
+app.include_router(workspace.router)
 
 
 @app.exception_handler(RequestValidationError)

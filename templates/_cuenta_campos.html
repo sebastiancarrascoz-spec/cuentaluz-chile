@@ -22,3 +22,4 @@
 <p class="hint">Los ajustes finales no reducen la base del IVA. Si tu descuento modifica esa base, necesitas revisar su tratamiento antes de incorporarlo. No copies importes brutos en campos netos.</p>
 <div class="field"><label for="total_documento">Total de tu documento para comparar ($), opcional</label><input id="total_documento" name="total_documento" type="number" min="0" max="1000000000000000" step="1" value="{{ valores.get('total_documento','') }}"></div>
 </fieldset>
+{% include "_cuenta_observada.html" %}

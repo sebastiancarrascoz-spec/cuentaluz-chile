@@ -1,4 +1,6 @@
 @media print {
+  :root, html, body { background:#fff !important; }
+  @page { @bottom-center { content:"CuentaLuz Chile - " counter(page) " / " counter(pages); font-size:8pt; color:#44584e; } }
   html,
   body {
     background: white;
@@ -95,4 +97,17 @@
     padding: 15px;
     margin-bottom: 15px;
   }
+}
+
+@media print {
+  body.printing-account #contenido > :not(.account-report) { display:none !important; }
+  .report-actions { display:none !important; }
+  .account-report { border:0; padding:0; box-shadow:none; font-size:10pt; break-inside:auto; }
+  .account-report p { overflow-wrap:anywhere; }
+  .account-report table { width:100%; }
+  .account-report .breakdown-table { font-size:8.5pt; }
+  .account-report tr { break-inside:avoid; }
+  .account-report h2,.account-report h3 { break-after:avoid; }
+  .account-report details > * { display:block !important; }
+  .account-report .pdf-table { overflow:visible; }
 }
