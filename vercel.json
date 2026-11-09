@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "fastapi",
+  "env": {
+    "APP_ENV": "production",
+    "APP_STORAGE": "none",
+    "APP_PREVIEW": "1"
+  },
+  "functions": {
+    "main.py": {
+      "maxDuration": 30,
+      "excludeFiles": "{.git/**,.venv/**,.qa/**,artifacts/**,cache/**,tests/**,scripts/**,scraper/**,scrapers/**,services/**,**/*.db,**/*.sqlite,**/*.sqlite3,**/*.pdf,**/*.xlsx,.env*}"
+    }
+  }
+}

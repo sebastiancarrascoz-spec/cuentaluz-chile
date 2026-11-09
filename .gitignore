@@ -13,6 +13,7 @@ build/
 venv/
 .venv/
 .qa/
+.vercel/
 artifacts/
 data/revision/
 env/

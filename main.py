@@ -1,6 +1,7 @@
 """CuentaLuz: interfaz pública, API y controles operativos."""
 import logging
 import os
+import re
 from contextlib import asynccontextmanager
 from pathlib import Path
 from uuid import uuid4
@@ -15,7 +16,7 @@ from sqlalchemy import text
 
 ROOT = Path(__file__).resolve().parent
 load_dotenv(ROOT / ".env")
-from database import Base, engine
+from database import Base, engine, PERSISTENCE_ENABLED
 from app.routes import calculator
 import app.models.subscriber  # registra tablas existentes sin captar datos
 import app.models.sec_cache
@@ -26,7 +27,8 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app):
-    Base.metadata.create_all(bind=engine)
+    if PERSISTENCE_ENABLED:
+        Base.metadata.create_all(bind=engine)
     # Los scrapers nunca publican tarifas desde el proceso web.
     yield
     engine.dispose()
@@ -36,7 +38,15 @@ app = FastAPI(title="CuentaLuz Chile", version="2.0.0", lifespan=lifespan,
     docs_url=None if PRODUCTION else "/docs", redoc_url=None,
     openapi_url=None if PRODUCTION else "/openapi.json")
 hosts = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1,testserver").split(",") if h.strip()]
-if PRODUCTION and (not os.getenv("ALLOWED_HOSTS") or "*" in hosts):
+# Solo nombres exactos asignados por la plataforma; nunca *.vercel.app.
+platform_hosts = []
+if os.getenv("VERCEL") == "1":
+    for key in ("VERCEL_URL", "VERCEL_BRANCH_URL", "VERCEL_PROJECT_PRODUCTION_URL"):
+        name = os.getenv(key, "")
+        if re.fullmatch(r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.vercel\.app", name):
+            platform_hosts.append(name)
+hosts = list(dict.fromkeys(hosts + platform_hosts))
+if PRODUCTION and ((not os.getenv("ALLOWED_HOSTS") and not platform_hosts) or "*" in hosts):
     raise RuntimeError("Configura ALLOWED_HOSTS con el dominio público antes de iniciar en producción.")
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=hosts)
 
@@ -63,6 +73,8 @@ class RequestControls:
                 if PRODUCTION:
                     headers.append((b"strict-transport-security", b"max-age=31536000"))
                 message["headers"] = headers
+                if os.getenv("VERCEL_ENV") == "preview" or os.getenv("APP_PREVIEW") == "1":
+                    headers.append((b"x-robots-tag", b"noindex, nofollow, noarchive"))
             await send(message)
         # Acumular únicamente peticiones pequeñas de formulario o JSON.
         chunks = []
@@ -111,11 +123,13 @@ def live():
 @app.get("/health/ready", include_in_schema=False)
 def ready():
     try:
-        with engine.connect() as connection:
-            connection.execute(text("SELECT 1"))
+        if PERSISTENCE_ENABLED:
+            with engine.connect() as connection:
+                connection.execute(text("SELECT 1"))
         from app.services.estimate_service import EstimateInput, estimar
         result = estimar(EstimateInput(kwh=250))
-        return {"status": "ok", "catalogo": result["tarifa"]["estado"], "modelo_publico": "Escenarios con precios propios y conciliación; catálogo oficial pendiente"}
+        return {"status": "ok", "almacenamiento": "database" if PERSISTENCE_ENABLED else "sin_persistencia",
+            "catalogo": result["tarifa"]["estado"], "modelo_publico": "Escenarios con precios propios y conciliación; catálogo oficial pendiente"}
     except Exception:
         logger.exception("Fallo de disponibilidad")
         return JSONResponse({"status": "unavailable"}, status_code=503)
@@ -123,6 +137,8 @@ def ready():
 
 @app.get("/robots.txt", include_in_schema=False)
 def robots(request: Request):
+    if os.getenv("VERCEL_ENV") == "preview" or os.getenv("APP_PREVIEW") == "1":
+        return PlainTextResponse("User-agent: *\nDisallow: /\n")
     return PlainTextResponse("User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /calcular\nSitemap: " + str(request.base_url) + "sitemap.xml\n")
 
 

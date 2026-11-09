@@ -21,7 +21,7 @@ templates.env.filters["clp"] = lambda v: "$" + f"{round(v):,}".replace(",", ".")
 
 
 def contexto(request, **extra):
-    return {"request": request, "tarifas": {k: v for k, v in cargar_tarifas().items() if isinstance(v, dict) and "tarifas" in v},
+    return {"request": request, "vista_previa": os.getenv("VERCEL_ENV") == "preview" or os.getenv("APP_PREVIEW") == "1", "tarifas": {k: v for k, v in cargar_tarifas().items() if isinstance(v, dict) and "tarifas" in v},
         "aparatos": cargar_aparatos(), **extra}
 
 

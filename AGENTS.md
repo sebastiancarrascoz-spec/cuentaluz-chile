@@ -2,6 +2,14 @@
 
 Proyecto independiente de Inergy, ARBA y del trabajo con el empleador. Leer `PRODUCCION.md` y `VERIFICACION.md` antes de continuar.
 
+## Actualización del 9 de noviembre de 2026: vista previa Vercel
+
+- Sebastián pidió ver la app en línea y usar Vercel; confirmó que tiene cuenta. Esta solicitud autoriza una vista previa y reemplaza la espera anterior para esa finalidad. El lanzamiento definitivo, servicios pagados y tarifas oficiales siguen pendientes.
+- Leer `VERCEL.md`. Proyecto verificado `cuentaluz-chile-preview`, equipo personal `sebastiancarrascoz-spec`, plan Hobby actual. La CLI ya estaba autenticada; no leer ni copiar credenciales. CLI 65.12.1 instalada en `.qa/vercel-cli`, fuera del paquete.
+- Se añadió `APP_STORAGE=none`, omitiendo tablas y conexiones en arranque/salud y rechazando sesiones DB. `vercel.json` fija modo producción, cálculo sin persistencia y Python 3.12. Los hosts Vercel se aceptan por nombres exactos de variables de sistema, nunca por comodín. Vista previa con rótulo y `noindex`.
+- Verificación local de adaptación: 230 pruebas Python aprobadas, cinco antiguas omitidas; siete cubren modo sin almacenamiento. La inspección del paquete comprobó fuentes de `app/services`, plantillas, catálogos y worker; excluye originales privados, DB, `.env`, respaldos, caches y herramientas.
+- La existencia del proyecto no acredita despliegue funcionando. Consultar `artifacts/vercel-preview-state.json` para el resultado real y la URL cuando se completen; verificar antes de entregarla. No promover a producción como parte de esta solicitud.
+
 ## Última actualización: cuenta consolidada y normalización del 8 de noviembre de 2026
 
 - Actualización posterior: Sebastián confirmó que no conoce red ni promedio de 2025; se mantienen pendientes y se añadió ayuda a `/metodologia#datos-suministro`. Confirmó que aún no tiene hosting/dominio y prefiere mejorar antes de publicar. No desplegar la web ni contratar servicios.

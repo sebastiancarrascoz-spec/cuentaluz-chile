@@ -24,7 +24,7 @@
       <a href="/metodologia" {% if request.url.path == '/metodologia' %}aria-current="page"{% endif %}>Cómo calculamos <span aria-hidden="true">↗</span></a>
     </nav>
   </div></header>
-  <main id="contenido" class="container">{% block content %}{% endblock %}</main>
+  <main id="contenido" class="container">{% if vista_previa %}<div class="notice"><p><strong>Vista previa de pruebas.</strong> Explora la aplicación con tus precios. Las tarifas oficiales siguen en validación.</p></div>{% endif %}{% block content %}{% endblock %}</main>
   <footer class="site-footer"><div class="container footer-inner"><a class="brand" href="/">CuentaLuz<span class="country">CHILE</span></a><p>Un poco más de claridad. Una mejor decisión.</p><a href="/metodologia#privacidad">Privacidad y alcance</a></div></footer>
   {% block scripts %}{% endblock %}
 </body>
